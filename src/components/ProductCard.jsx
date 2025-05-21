@@ -37,6 +37,8 @@ export default ProductCard;
 
 const styles = {
     card: {
+        backgroundColor: "#ffffff",
+        border: "1px solid #ddd",
         borderRadius: "10px",
         display: "flex",
         flexDirection: "column",
