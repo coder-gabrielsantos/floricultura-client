@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import ProductCard from "../../components/ProductCard";
+import { NavArrowDownSolid } from "iconoir-react";
 import styles from "./Home.module.css";
 
 const linkImage = "https://content.clara.es/medio/2022/10/04/plantas-con-flores-rojas-rosa_8afd8936_1280x1820.jpg";
+
+const mockCatalogs = [
+    { _id: "all", name: "Todos os catálogos" },
+    { _id: "romantico", name: "Romântico" },
+    { _id: "aniversario", name: "Aniversário" },
+    { _id: "maes", name: "Dia das Mães" }
+];
 
 const mockProducts = [
     {
@@ -65,57 +72,77 @@ const mockProducts = [
 ];
 
 const Home = () => {
-    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
+    const [selectedCatalog, setSelectedCatalog] = useState("all");
     const [cart, setCart] = useState([]);
-    const isLoggedIn = false; // simulado
 
     useEffect(() => {
         setProducts(mockProducts);
     }, []);
 
+    const filteredProducts =
+        selectedCatalog === "all"
+            ? products
+            : products.filter((p) => p.catalogs.includes(selectedCatalog));
+
     const handleAddToCart = (product) => {
-        if (!isLoggedIn) {
-            navigate("/login");
-        } else {
-            setCart([...cart, product]);
-        }
+        setCart([...cart, product]);
     };
 
     const total = cart.reduce((acc, item) => acc + item.price, 0);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.products}>
-                <h1 className={styles.title}>Flores para todas as ocasiões</h1>
-                <div className={styles.grid}>
-                    {products.map((p) => (
-                        <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart}/>
-                    ))}
-                </div>
-            </div>
+        <div className={styles.wrapper}>
+            <div className={styles.container}>
+                <div className={styles.left}>
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Flores para todas as ocasiões</h1>
 
-            <div className={styles.cart}>
-                <h2 className={styles.cartTitle}>Sua sacola</h2>
-                {cart.length === 0 ? (
-                    <p className={styles.empty}>Sua sacola está vazia.</p>
-                ) : (
-                    <>
-                        <ul className={styles.itemList}>
-                            {cart.map((item, i) => (
-                                <li key={i} className={styles.item}>
-                                    <span>{item.name}</span>
-                                    <strong>R$ {item.price.toFixed(2)}</strong>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className={styles.totalBox}>
-                            <span>Total:</span>
-                            <strong>R$ {total.toFixed(2)}</strong>
+                        <div className={styles.selectWrapper}>
+                            <select
+                                className={styles.select}
+                                value={selectedCatalog}
+                                onChange={(e) => setSelectedCatalog(e.target.value)}
+                            >
+                                {mockCatalogs.map((c) => (
+                                    <option key={c._id} value={c._id}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <NavArrowDownSolid width={"22px"} className={styles.selectIcon} />
                         </div>
-                        <button className={styles.checkoutButton}>Finalizar Pedido</button>
-                    </>
-                )}
+                    </div>
+
+                    <div className={styles.grid}>
+                        {filteredProducts.map((p) => (
+                            <ProductCard key={p._id} product={p} onAddToCart={handleAddToCart}/>
+                        ))}
+                    </div>
+                </div>
+
+                <div className={styles.cart}>
+                    <h2 className={styles.cartTitle}>Sua sacola</h2>
+                    {cart.length === 0 ? (
+                        <p className={styles.empty}>Sua sacola está vazia.</p>
+                    ) : (
+                        <>
+                            <ul className={styles.itemList}>
+                                {cart.map((item, i) => (
+                                    <li key={i} className={styles.item}>
+                                        <span>{item.name}</span>
+                                        <strong>R$ {item.price.toFixed(2)}</strong>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className={styles.totalBox}>
+                                <span>Total:</span>
+                                <strong>R$ {total.toFixed(2)}</strong>
+                            </div>
+                            <button className={styles.checkoutButton}>Finalizar Pedido</button>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
