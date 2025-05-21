@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { LogIn } from "iconoir-react";
 
-const Navbar = () => {
+const Navbar = ({ onLoginClick }) => {
     return (
         <nav style={styles.navbar}>
             <div style={styles.container}>
@@ -15,10 +15,10 @@ const Navbar = () => {
                     <Link to="/contato" style={styles.link}>Contato</Link>
                 </div>
 
-                <Link to="/login" style={styles.login}>
+                <div onClick={onLoginClick} style={styles.login}>
                     <LogIn style={styles.icon} />
                     <span>Entrar</span>
-                </Link>
+                </div>
             </div>
         </nav>
     );
@@ -63,6 +63,7 @@ const styles = {
     login: {
         alignItems: "center",
         color: "#4CAF50",
+        cursor: "pointer",
         display: "flex",
         fontSize: "0.95rem",
         fontWeight: 500,
