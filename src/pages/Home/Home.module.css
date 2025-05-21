@@ -135,3 +135,58 @@
     padding: 0.75rem;
     width: 100%;
 }
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 1200px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .cart {
+        width: 100%;
+        flex: unset;
+        margin-top: 2rem;
+        max-height: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .selectWrapper {
+        width: 100%;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .select {
+        font-size: 0.95rem;
+        padding: 0.5rem 2rem 0.5rem 1rem;
+    }
+
+    .selectIcon {
+        font-size: 1rem;
+        right: 0.75rem;
+    }
+}
