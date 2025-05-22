@@ -86,8 +86,18 @@ const Home = () => {
             : products.filter((p) => p.catalogs.includes(selectedCatalog));
 
     const handleAddToCart = (product) => {
-        setCart([...cart, product]);
+        setCart((prev) => [...prev, product]);
     };
+
+    const cartSummary = cart.reduce((acc, item) => {
+        const existing = acc.find((p) => p.id === item.id);
+        if (existing) {
+            existing.quantity += 1;
+        } else {
+            acc.push({ ...item, quantity: 1 });
+        }
+        return acc;
+    }, []);
 
     const total = cart.reduce((acc, item) => acc + item.price, 0);
 
@@ -110,13 +120,13 @@ const Home = () => {
                                     </option>
                                 ))}
                             </select>
-                            <NavArrowDownSolid width={"22px"} className={styles.selectIcon} />
+                            <NavArrowDownSolid className={styles.selectIcon} />
                         </div>
                     </div>
 
                     <div className={styles.grid}>
                         {filteredProducts.map((p) => (
-                            <ProductCard key={p._id} product={p} onAddToCart={handleAddToCart}/>
+                            <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} />
                         ))}
                     </div>
                 </div>
@@ -128,10 +138,13 @@ const Home = () => {
                     ) : (
                         <>
                             <ul className={styles.itemList}>
-                                {cart.map((item, i) => (
+                                {cartSummary.map((item, i) => (
                                     <li key={i} className={styles.item}>
-                                        <span>{item.name}</span>
-                                        <strong>R$ {item.price.toFixed(2)}</strong>
+                                        <div className={styles.itemInfo}>
+                                            <img src={item.image} alt={item.name} className={styles.itemImage} />
+                                            <span>{item.name} x{item.quantity}</span>
+                                        </div>
+                                        <strong>R$ {(item.price * item.quantity).toFixed(2)}</strong>
                                     </li>
                                 ))}
                             </ul>
