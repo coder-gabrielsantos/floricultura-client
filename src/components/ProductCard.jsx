@@ -37,56 +37,58 @@ export default ProductCard;
 
 const styles = {
     card: {
-        backgroundColor: "#ffffff",
+        backgroundColor: "#fff",
         border: "1px solid #ddd",
-        borderRadius: "10px",
+        borderRadius: "12px",
         display: "flex",
         flexDirection: "column",
-        height: "350px",
+        maxWidth: "320px",
+        width: "100%",
         overflow: "hidden",
-        transition: "all 0.25s ease",
-        width: "100%"
+        transition: "box-shadow 0.3s ease"
     },
     imageWrapper: {
-        height: "180px",
-        overflow: "hidden",
-        width: "100%"
+        width: "100%",
+        aspectRatio: "4 / 3",   // ← mantém proporção
+        overflow: "hidden"
     },
     image: {
+        width: "100%",
         height: "100%",
-        objectFit: "cover",
-        width: "100%"
+        objectFit: "cover"
     },
     content: {
         display: "flex",
         flexDirection: "column",
-        gap: "0.5rem",
         padding: "1rem",
         flex: 1
     },
+
     name: {
-        fontSize: "1rem",
+        fontSize: "1.1rem",
         fontWeight: 600,
+        marginBottom: "0.5rem", // ← espaço abaixo do título
+        whiteSpace: "nowrap",
         overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
+        textOverflow: "ellipsis"
     },
+
     description: {
+        fontSize: "0.9rem",
         color: "#555",
-        display: "-webkit-box",
-        fontSize: "0.8rem",
-        fontWeight: "500",
-        lineHeight: "1.2rem",
-        maxHeight: "3.6rem", // 1.2rem * 3 linhas
+        lineHeight: "1.3rem",
+        marginBottom: "1rem", // ← espaço abaixo da descrição
         overflow: "hidden",
         textOverflow: "ellipsis",
+        display: "-webkit-box",
         WebkitBoxOrient: "vertical",
-        WebkitLineClamp: 3,
+        WebkitLineClamp: 3
     },
+
     footer: {
-        alignItems: "center",
         display: "flex",
         justifyContent: "space-between",
+        alignItems: "center",
         marginTop: "auto"
     },
     price: {
