@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard";
-import { NavArrowDownSolid } from "iconoir-react";
+import Select from "react-select";
 import styles from "./Home.module.css";
 
 const linkImage = "https://content.clara.es/medio/2022/10/04/plantas-con-flores-rojas-rosa_8afd8936_1280x1820.jpg";
@@ -91,18 +91,17 @@ const Home = () => {
                     <h1 className={styles.title}>Flores para todas as ocasiões</h1>
 
                     <div className={styles.selectWrapper}>
-                        <select
+                        <Select
+                            options={mockCatalogs.map((c) => ({
+                                value: c._id,
+                                label: c.name
+                            }))}
+                            value={mockCatalogs.find((c) => c._id === selectedCatalog)}
+                            onChange={(option) => setSelectedCatalog(option.value)}
                             className={styles.select}
-                            value={selectedCatalog}
-                            onChange={(e) => setSelectedCatalog(e.target.value)}
-                        >
-                            {mockCatalogs.map((c) => (
-                                <option key={c._id} value={c._id}>
-                                    {c.name}
-                                </option>
-                            ))}
-                        </select>
-                        <NavArrowDownSolid className={styles.selectIcon} />
+                            classNamePrefix="react-select"
+                            isSearchable={false}
+                        />
                     </div>
                 </div>
 
@@ -116,4 +115,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+    export default Home;

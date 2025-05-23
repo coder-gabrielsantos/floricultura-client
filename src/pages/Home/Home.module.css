@@ -9,8 +9,8 @@
     gap: 2rem;
     margin: 0 auto;
     max-width: 1440px;
-    width: 100%;            /* ← obrigatório para ocupar todo o espaço horizontal */
-    padding: 2rem 2rem;        /* ← mesmo espaçamento lateral da Navbar */
+    padding: 2rem 2rem;
+    width: 100%;
 }
 
 .header {
@@ -29,36 +29,6 @@
 
 /* SELECT de Catálogo */
 
-.selectWrapper {
-    position: relative;
-    width: 240px;
-}
-
-.select {
-    appearance: none;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
-    color: #333;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.6rem 2.5rem 0.6rem 1rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    width: 100%;
-}
-
-.select:hover {
-    border-color: #999;
-}
-
-.select:focus {
-    border-color: #4caf50;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-}
-
 .selectIcon {
     color: #555;
     pointer-events: none;
@@ -67,6 +37,14 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 1.2rem;
+}
+
+.selectWrapper {
+    width: 240px;
+}
+
+.select {
+    font-size: 1rem;
 }
 
 /* GRID de Produtos */
