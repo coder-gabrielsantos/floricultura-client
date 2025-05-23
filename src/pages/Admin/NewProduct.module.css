@@ -1,0 +1,108 @@
+.container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 16px;
+    border: 1px solid #ccc; /* ← borda visível */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.input {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: border 0.2s, box-shadow 0.2s;
+    resize: none; /* ← impede redimensionamento */
+}
+
+.input:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.selectContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.selectLabel {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.button {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75rem;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    background-color: #449d48;
+}
+
+.message {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #4caf50;
+}
+
+.imageInputWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.imageInputLabel {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #444;
+    transition: background-color 0.2s ease;
+}
+
+.imageInputLabel:hover {
+    background-color: #f0f0f0;
+}
+
+.hiddenFileInput {
+    display: none;
+}
+
+.preview {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
