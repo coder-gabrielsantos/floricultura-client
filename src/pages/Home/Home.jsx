@@ -74,7 +74,6 @@ const mockProducts = [
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedCatalog, setSelectedCatalog] = useState("all");
-    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         setProducts(mockProducts);
@@ -85,76 +84,32 @@ const Home = () => {
             ? products
             : products.filter((p) => p.catalogs.includes(selectedCatalog));
 
-    const handleAddToCart = (product) => {
-        setCart((prev) => [...prev, product]);
-    };
-
-    const cartSummary = cart.reduce((acc, item) => {
-        const existing = acc.find((p) => p.id === item.id);
-        if (existing) {
-            existing.quantity += 1;
-        } else {
-            acc.push({ ...item, quantity: 1 });
-        }
-        return acc;
-    }, []);
-
-    const total = cart.reduce((acc, item) => acc + item.price, 0);
-
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>
-                <div className={styles.left}>
-                    <div className={styles.header}>
-                        <h1 className={styles.title}>Flores para todas as ocasiões</h1>
+                <div className={styles.header}>
+                    <h1 className={styles.title}>Flores para todas as ocasiões</h1>
 
-                        <div className={styles.selectWrapper}>
-                            <select
-                                className={styles.select}
-                                value={selectedCatalog}
-                                onChange={(e) => setSelectedCatalog(e.target.value)}
-                            >
-                                {mockCatalogs.map((c) => (
-                                    <option key={c._id} value={c._id}>
-                                        {c.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <NavArrowDownSolid className={styles.selectIcon} />
-                        </div>
-                    </div>
-
-                    <div className={styles.grid}>
-                        {filteredProducts.map((p) => (
-                            <ProductCard key={p.id} product={p} onAddToCart={handleAddToCart} />
-                        ))}
+                    <div className={styles.selectWrapper}>
+                        <select
+                            className={styles.select}
+                            value={selectedCatalog}
+                            onChange={(e) => setSelectedCatalog(e.target.value)}
+                        >
+                            {mockCatalogs.map((c) => (
+                                <option key={c._id} value={c._id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                        <NavArrowDownSolid className={styles.selectIcon} />
                     </div>
                 </div>
 
-                <div className={styles.cart}>
-                    <h2 className={styles.cartTitle}>Sua sacola</h2>
-                    {cart.length === 0 ? (
-                        <p className={styles.empty}>Sua sacola está vazia.</p>
-                    ) : (
-                        <>
-                            <ul className={styles.itemList}>
-                                {cartSummary.map((item, i) => (
-                                    <li key={i} className={styles.item}>
-                                        <div className={styles.itemInfo}>
-                                            <img src={item.image} alt={item.name} className={styles.itemImage} />
-                                            <span>{item.name} x{item.quantity}</span>
-                                        </div>
-                                        <strong>R$ {(item.price * item.quantity).toFixed(2)}</strong>
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className={styles.totalBox}>
-                                <span>Total:</span>
-                                <strong>R$ {total.toFixed(2)}</strong>
-                            </div>
-                            <button className={styles.checkoutButton}>Finalizar Pedido</button>
-                        </>
-                    )}
+                <div className={styles.grid}>
+                    {filteredProducts.map((p) => (
+                        <ProductCard key={p.id} product={p} onAddToCart={() => {}} />
+                    ))}
                 </div>
             </div>
         </div>

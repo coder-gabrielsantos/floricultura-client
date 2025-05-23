@@ -5,17 +5,12 @@
 
 .container {
     display: flex;
+    flex-direction: column;
     gap: 2rem;
     margin: 0 auto;
     max-width: 1440px;
-    padding: 2rem;
-}
-
-.left {
-    flex: 3;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    width: 100%;            /* ← obrigatório para ocupar todo o espaço horizontal */
+    padding: 2rem 2rem;        /* ← mesmo espaçamento lateral da Navbar */
 }
 
 .header {
@@ -23,6 +18,7 @@
     display: flex;
     gap: 1rem;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .title {
@@ -78,131 +74,31 @@
 .grid {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(4, 1fr); /* Agora padrão com 4 */
-}
-
-/* SACOLA */
-
-.cart {
-    background-color: #f8f8f8;
-    border-radius: 12px;
-    box-shadow: 0 0 5px #ccc;
-    flex: 1.2;
-    height: fit-content;
-    max-height: 85vh;
-    min-width: 320px;
-    overflow-y: auto;
-    padding: 1.5rem;
-}
-
-.cartTitle {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
-
-.empty {
-    color: #777;
-}
-
-.itemList {
-    list-style: none;
-    margin-bottom: 1rem;
-    padding: 0;
-}
-
-.item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-.itemInfo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.itemImage {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-}
-
-.totalBox {
-    border-top: 1px solid #ccc;
-    display: flex;
-    font-weight: bold;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    padding: 0.5rem 0;
-}
-
-.checkoutButton {
-    background-color: #4caf50;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.75rem;
-    width: 100%;
+    grid-template-columns: repeat(5, 1fr); /* 4 colunas fixas */
+    align-items: stretch;
 }
 
 /* RESPONSIVIDADE */
 
-@media (max-width: 1456px) {
+@media (max-width: 1200px) {
     .grid {
         grid-template-columns: repeat(3, 1fr);
     }
-
-    .container {
-        flex-direction: column;
-    }
-
-    .cart {
-        width: 100%;
-        flex: unset;
-        margin-top: 2rem;
-        max-height: none;
-    }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
     .grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 600px) {
     .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .container {
-        flex-direction: column;
-    }
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .cart {
-        width: 100%;
-        flex: unset;
-        margin-top: 2rem;
-        max-height: none;
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 640px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
     .selectWrapper {
         width: 100%;
     }
