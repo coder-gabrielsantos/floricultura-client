@@ -57,7 +57,13 @@ const UserProfile = () => {
                             </div>
 
                             <div className={styles.addressActions}>
-                                <button className={styles.editBtn}>Editar</button>
+                                <button
+                                    className={styles.editBtn}
+                                    onClick={() => navigate(`/endereco?id=${addr._id}`)}
+                                >
+                                    Editar
+                                </button>
+
                                 <button className={styles.deleteBtn}>Excluir</button>
                             </div>
                         </div>
