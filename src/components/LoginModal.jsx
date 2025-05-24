@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { loginUser, registerUser } from "../api/index.js";
+import { loginUser, registerUser } from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const LoginModal = ({ onClose }) => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -10,6 +11,7 @@ const LoginModal = ({ onClose }) => {
         password: ""
     });
     const [message, setMessage] = useState("");
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,19 +25,28 @@ const LoginModal = ({ onClose }) => {
         }, 300);
     };
 
+    const isIdentifierValid = () => form.identifier.includes("@");
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage("");
+
+        if (!isIdentifierValid()) {
+            setMessage("Insira um e-mail válido com '@'.");
+            return;
+        }
+
         try {
             if (isRegistering) {
                 const user = await registerUser(form);
-                console.log("Registered:", user);
+                login(user);
                 handleClose();
             } else {
                 const user = await loginUser({
                     identifier: form.identifier,
                     password: form.password
                 });
-                console.log("Logged in:", user);
+                login(user);
                 handleClose();
             }
         } catch (err) {
@@ -80,7 +91,7 @@ const LoginModal = ({ onClose }) => {
                     <input
                         type="text"
                         name="identifier"
-                        placeholder="Email ou Telefone"
+                        placeholder="Email"
                         value={form.identifier}
                         onChange={handleChange}
                         style={styles.input}
