@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { LogIn } from "iconoir-react";
+import { LogIn, User } from "iconoir-react";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Navbar = ({ onLoginClick }) => {
+    const { user } = useAuth()
+
     return (
         <nav style={styles.navbar}>
             <div style={styles.container}>
@@ -15,10 +18,17 @@ const Navbar = ({ onLoginClick }) => {
                     <Link to="/contato" style={styles.link}>Contato</Link>
                 </div>
 
-                <div onClick={onLoginClick} style={styles.login}>
-                    <LogIn style={styles.icon} />
-                    <span>Entrar</span>
-                </div>
+                {user ? (
+                    <Link to="/perfil" style={styles.login}>
+                        <User style={styles.icon} />
+                        {user.name.split(" ")[0] || "Perfil"}
+                    </Link>
+                ) : (
+                    <div onClick={onLoginClick} style={styles.login}>
+                        <LogIn style={styles.icon} />
+                        Entrar
+                    </div>
+                )}
             </div>
         </nav>
     );
