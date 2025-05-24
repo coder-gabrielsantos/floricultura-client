@@ -4,7 +4,7 @@ import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
 import UserProfile from "./pages/User/UserProfile.jsx";
-import NewAddress from "./pages/User/NewAddress.jsx";
+import UserAddress from "./pages/User/UserAddress.jsx";
 
 import NewProduct from "./pages/Admin/NewProduct.jsx";
 
@@ -19,7 +19,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/perfil" element={<UserProfile />} />
-                <Route path="/novo-endereco" element={<NewAddress />} />
+                <Route path="/endereco" element={<UserAddress />} />
                 <Route path="/admin" element={<NewProduct />} />
             </Routes>
         </Router>

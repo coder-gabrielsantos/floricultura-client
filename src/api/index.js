@@ -36,6 +36,22 @@ export const createAddress = async (data, token) => {
     return response.data;
 };
 
+// GET ADDRESS BY ID
+export const getAddressById = async (id, token) => {
+    const response = await API.get(`/addresses/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+};
+
+// UPDATE ADDRESS
+export const updateAddress = async (id, data, token) => {
+    const response = await API.put(`/addresses/${id}`, data, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+};
+
 // CREATE PRODUCT
 export const createProduct = async (productData) => {
     const response = await API.post("/products", productData);
