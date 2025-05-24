@@ -6,13 +6,33 @@ const API = axios.create({
 
 // LOGIN
 export const loginUser = async (credentials) => {
-    const response = await API.post("/auth/login", credentials);
+    const response = await API.post("/users/login", credentials);
     return response.data;
 };
 
 // REGISTER
 export const registerUser = async (data) => {
-    const response = await API.post("/auth/register", data);
+    const response = await API.post("/users/register", data);
+    return response.data;
+};
+
+// GET USER DATA
+export const getUserData = async () => {
+    const response = await API.get("/users/me", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : ""}`
+        }
+    });
+    return response.data;
+};
+
+// CREATE ADDRESS
+export const createAddress = async (data, token) => {
+    const response = await API.post("/addresses", data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
     return response.data;
 };
 

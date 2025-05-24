@@ -1,46 +1,33 @@
-import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUserData } from "../../api";
 import styles from "./UserProfile.module.css";
 
 const UserProfile = () => {
-    const { user } = useAuth();
-    const [expanded, setExpanded] = useState(null);
+    const navigate = useNavigate();
 
-    const orders = [
-        {
-            id: "1",
-            date: "2024-12-01",
-            total: 89.9,
-            status: "Entregue",
-            products: ["Buquê Girassol", "Orquídea Mini"]
-        },
-        {
-            id: "2",
-            date: "2024-11-10",
-            total: 45.0,
-            status: "Aguardando pagamento",
-            products: ["Ramalhete Clássico"]
-        }
-    ];
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const addresses = [
-        {
-            street: "Rua das Flores",
-            number: "123",
-            neighborhood: "Jardim",
-            reference: "Próximo à padaria",
-            complement: "Apto 202",
-            receiver: "Maria Silva"
-        },
-        {
-            street: "Av. Central",
-            number: "456",
-            neighborhood: "Centro",
-            reference: "Em frente ao mercado",
-            complement: "",
-            receiver: "João Oliveira"
-        }
-    ];
+    useEffect(() => {
+        getUserData()
+            .then((data) => {
+                setProfile(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Erro ao carregar usuário:", err);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className={styles.loadingWrapper}>
+                <p className={styles.loading}>Carregando dados...</p>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.container}>
@@ -48,62 +35,72 @@ const UserProfile = () => {
 
             <div className={styles.section}>
                 <h3>Meus Dados</h3>
-                <p><strong>Nome:</strong> {user?.name}</p>
-                <p><strong>Email:</strong> {user?.email || user?.identifier}</p>
+                <p><strong>Nome:</strong> {profile.name}</p>
+                <p><strong>Email:</strong> {profile.email || profile.phone}</p>
             </div>
 
             <div className={styles.section}>
                 <h3>Meus Endereços</h3>
+                {profile.addresses && profile.addresses.length > 0 ? (
+                    profile.addresses.map((addr, i) => (
+                        <div key={i} className={styles.addressCard}>
+                            <div className={styles.addressTop}>
+                                <div className={styles.addressContent}>
+                                    <p>{addr.street}, {addr.number}</p>
+                                    <p>Bairro: {addr.neighborhood}</p>
+                                    <p>Referência: {addr.reference}</p>
+                                    {addr.complement && (
+                                        <p>Complemento: {addr.complement}</p>
+                                    )}
+                                </div>
+                                <span className={styles.addressIndex}>Endereço #{i + 1}</span>
+                            </div>
 
-                {addresses.map((addr, i) => (
-                    <div key={i} className={styles.addressCard}>
-                        <p>{addr.street}, {addr.number}</p>
-                        <p>Bairro: {addr.neighborhood}</p>
-                        <p>Referência: {addr.reference}</p>
-                        {addr.complement && (
-                            <p>Complemento: {addr.complement}</p>
-                        )}
-
-                        <div className={styles.addressActions}>
-                            <button className={styles.editBtn}>Editar</button>
-                            <button className={styles.deleteBtn}>Excluir</button>
+                            <div className={styles.addressActions}>
+                                <button className={styles.editBtn}>Editar</button>
+                                <button className={styles.deleteBtn}>Excluir</button>
+                            </div>
                         </div>
-                    </div>
-                ))}
-
-                <button className={styles.addAddress}>+ Adicionar Endereço</button>
+                    ))
+                ) : (
+                    <p style={{ color: "#777", marginTop: "1rem" }}>
+                        Nenhum endereço cadastrado.
+                    </p>
+                )}
+                <button className={styles.addAddress} onClick={() => navigate("/novo-endereco")}>
+                    + Adicionar Endereço
+                </button>
             </div>
 
             <div className={styles.section}>
                 <h3>Meus Pedidos</h3>
-                {orders.map((order) => (
-                    <div
-                        key={order.id}
-                        className={`${styles.order} ${expanded === order.id ? styles.expanded : ""}`}
-                        onClick={() => setExpanded(expanded === order.id ? null : order.id)}
-                    >
-                        <div className={styles.orderHeader}>
-                            <span className={styles.orderNumber}>Pedido #{order.id}</span>
-                            <span className={styles.date}>{order.date}</span>
+                {profile.orders && profile.orders.length > 0 ? (
+                    profile.orders.map((order) => (
+                        <div key={order._id} className={styles.order}>
+                            <div className={styles.orderHeader}>
+                                <span className={styles.orderNumber}>Pedido #{order._id}</span>
+                                <span className={styles.date}>{order.date}</span>
+                            </div>
+                            <ul className={styles.productList}>
+                                {order.products.map((item, i) => (
+                                    <li key={i} className={styles.productItem}>
+                                        {item.product.name} x{item.quantity}
+                                    </li>
+                                ))}
+                            </ul>
+                            <div className={styles.orderInfo}>
+                                <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
+                                <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
+                  {order.status}
+                </span>
+                            </div>
                         </div>
-
-                        {expanded === order.id && (
-                            <>
-                                <ul className={styles.productList}>
-                                    {order.products.map((product, i) => (
-                                        <li key={i} className={styles.productItem}>{product}</li>
-                                    ))}
-                                </ul>
-                                <div className={styles.orderInfo}>
-                                    <span className={styles.total}>Total: R$ {order.total.toFixed(2)}</span>
-                                    <span className={`${styles.status} ${styles[order.status.toLowerCase().replace(/\s/g, "-")]}`}>
-                                    {order.status}
-                                </span>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <p style={{ color: "#777", marginTop: "1rem" }}>
+                        Nenhum pedido realizado.
+                    </p>
+                )}
             </div>
         </div>
     );

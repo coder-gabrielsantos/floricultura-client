@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createAddress } from "../../api";
 import styles from "./NewAddress.module.css";
 
 const NewAddress = () => {
@@ -17,9 +18,9 @@ const NewAddress = () => {
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Novo endereço:", form);
+        await createAddress(form, JSON.parse(localStorage.getItem("user"))?.token);
         navigate("/perfil");
     };
 

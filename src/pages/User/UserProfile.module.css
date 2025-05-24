@@ -47,6 +47,32 @@
     margin-top: 1rem;
 }
 
+.addressCard {
+    position: relative;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.addressTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.addressContent {
+    flex: 1;
+}
+
+.addressIndex {
+    font-size: 0.9rem;
+    color: #777;
+    white-space: nowrap;
+    margin-left: 1rem;
+}
+
 .editBtn,
 .deleteBtn {
     border: none;
@@ -151,4 +177,16 @@
 .status.aguardando-pagamento {
     background-color: #fff3e0;
     color: #f57c00;
+}
+
+.loadingWrapper {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.loading {
+    color: #555;
+    font-size: 1.1rem;
 }
