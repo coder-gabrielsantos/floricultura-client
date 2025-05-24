@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { loginUser, registerUser } from "../api/index.js";
 
 const LoginModal = ({ onClose }) => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -8,19 +9,11 @@ const LoginModal = ({ onClose }) => {
         identifier: "",
         password: ""
     });
+    const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (isRegistering) {
-            console.log("Cadastro enviado:", form);
-        } else {
-            console.log("Login enviado:", form);
-        }
-        handleClose();
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleClose = () => {
@@ -28,6 +21,29 @@ const LoginModal = ({ onClose }) => {
         setTimeout(() => {
             onClose();
         }, 300);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (isRegistering) {
+                const user = await registerUser(form);
+                console.log("Registered:", user);
+                handleClose();
+            } else {
+                const user = await loginUser({
+                    identifier: form.identifier,
+                    password: form.password
+                });
+                console.log("Logged in:", user);
+                handleClose();
+            }
+        } catch (err) {
+            console.error("Auth error:", err);
+            setMessage(
+                err.response?.data?.message || "Erro ao autenticar. Tente novamente."
+            );
+        }
     };
 
     return (
@@ -58,6 +74,7 @@ const LoginModal = ({ onClose }) => {
                             value={form.name}
                             onChange={handleChange}
                             style={styles.input}
+                            required
                         />
                     )}
                     <input
@@ -67,6 +84,7 @@ const LoginModal = ({ onClose }) => {
                         value={form.identifier}
                         onChange={handleChange}
                         style={styles.input}
+                        required
                     />
                     <input
                         type="password"
@@ -75,16 +93,26 @@ const LoginModal = ({ onClose }) => {
                         value={form.password}
                         onChange={handleChange}
                         style={styles.input}
+                        required
                     />
                     <button type="submit" style={styles.button}>
                         {isRegistering ? "Cadastrar" : "Entrar"}
                     </button>
                 </form>
 
+                {message && (
+                    <p style={{ textAlign: "center", color: "tomato", marginTop: "1rem" }}>
+                        {message}
+                    </p>
+                )}
+
                 <p style={styles.toggle}>
                     {isRegistering ? "Já tem uma conta?" : "Ainda não tem uma conta?"}{" "}
                     <span
-                        onClick={() => setIsRegistering(!isRegistering)}
+                        onClick={() => {
+                            setIsRegistering(!isRegistering);
+                            setMessage("");
+                        }}
                         style={styles.link}
                     >
             {isRegistering ? "Entrar" : "Criar conta"}
@@ -113,7 +141,7 @@ const styles = {
     modal: {
         backgroundColor: "#fff",
         borderRadius: "16px",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
         maxWidth: "400px",
         padding: "2rem",
         transform: "translateY(100vh)",
