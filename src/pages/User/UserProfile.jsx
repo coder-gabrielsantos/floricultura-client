@@ -57,13 +57,12 @@ const UserProfile = () => {
 
                 {addresses.map((addr, i) => (
                     <div key={i} className={styles.addressCard}>
-                        <p><strong>Rua:</strong> {addr.street}, {addr.number}</p>
-                        <p><strong>Bairro:</strong> {addr.neighborhood}</p>
-                        <p><strong>Referência:</strong> {addr.reference}</p>
+                        <p>{addr.street}, {addr.number}</p>
+                        <p>Bairro: {addr.neighborhood}</p>
+                        <p>Referência: {addr.reference}</p>
                         {addr.complement && (
-                            <p><strong>Complemento:</strong> {addr.complement}</p>
+                            <p>Complemento: {addr.complement}</p>
                         )}
-                        <p><strong>Recebedor:</strong> {addr.receiver}</p>
 
                         <div className={styles.addressActions}>
                             <button className={styles.editBtn}>Editar</button>

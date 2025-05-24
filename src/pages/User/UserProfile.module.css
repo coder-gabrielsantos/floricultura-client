@@ -44,7 +44,7 @@
 .addressActions {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .editBtn,

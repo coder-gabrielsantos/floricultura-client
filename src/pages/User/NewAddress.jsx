@@ -29,7 +29,7 @@ const NewAddress = () => {
             <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.row}>
                     <div className={`${styles.field} ${styles.streetField}`}>
-                        <label htmlFor="street">Rua</label>
+                        <label htmlFor="street">Endereço</label>
                         <input
                             id="street"
                             name="street"
@@ -74,7 +74,7 @@ const NewAddress = () => {
                 </div>
 
                 <div className={styles.field}>
-                    <label htmlFor="complement">Complemento</label>
+                    <label htmlFor="complement">Complemento (opcional)</label>
                     <input
                         id="complement"
                         name="complement"
