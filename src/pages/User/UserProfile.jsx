@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData } from "../../api";
+import { getUserData, deleteAddress } from "../../api";
+import ConfirmModal from "../../components/ConfirmModal.jsx";
 import styles from "./UserProfile.module.css";
 
 const UserProfile = () => {
@@ -8,6 +9,7 @@ const UserProfile = () => {
 
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [confirming, setConfirming] = useState(null); // id do endereço
 
     useEffect(() => {
         getUserData()
@@ -64,7 +66,12 @@ const UserProfile = () => {
                                     Editar
                                 </button>
 
-                                <button className={styles.deleteBtn}>Excluir</button>
+                                <button
+                                    className={styles.deleteBtn}
+                                    onClick={() => setConfirming(addr._id)}
+                                >
+                                    Excluir
+                                </button>
                             </div>
                         </div>
                     ))
@@ -97,8 +104,8 @@ const UserProfile = () => {
                             <div className={styles.orderInfo}>
                                 <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
                                 <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
-                  {order.status}
-                </span>
+                                    {order.status}
+                                </span>
                             </div>
                         </div>
                     ))
@@ -108,6 +115,24 @@ const UserProfile = () => {
                     </p>
                 )}
             </div>
+
+            {confirming && (
+                <ConfirmModal
+                    message="Deseja realmente excluir este endereço?"
+                    onClose={() => setConfirming(null)}
+                    onConfirm={async () => {
+                        const token = JSON.parse(localStorage.getItem("user"))?.token;
+                        try {
+                            await deleteAddress(confirming, token);
+                            const updated = await getUserData();
+                            setProfile(updated);
+                            setConfirming(null);
+                        } catch (err) {
+                            console.error("Erro ao excluir endereço:", err);
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 };

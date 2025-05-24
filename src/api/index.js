@@ -52,6 +52,16 @@ export const updateAddress = async (id, data, token) => {
     return response.data;
 };
 
+// DELETE ADDRESS
+export const deleteAddress = async (id, token) => {
+    const response = await API.delete(`/addresses/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
+};
+
 // CREATE PRODUCT
 export const createProduct = async (productData) => {
     const response = await API.post("/products", productData);
