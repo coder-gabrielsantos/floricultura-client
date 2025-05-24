@@ -67,7 +67,7 @@ const UserProfile = () => {
                         Nenhum endereço cadastrado.
                     </p>
                 )}
-                <button className={styles.addAddress} onClick={() => navigate("/novo-endereco")}>
+                <button className={styles.addAddress} onClick={() => navigate("/endereco")}>
                     + Adicionar Endereço
                 </button>
             </div>
