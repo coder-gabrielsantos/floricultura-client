@@ -58,7 +58,7 @@ const NewAddress = () => {
             </h2>
 
             {loading ? (
-                <p style={{ textAlign: "center" }}>Carregando...</p>
+                <p style={{ textAlign: "center" }}></p>
             ) : (
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.row}>
