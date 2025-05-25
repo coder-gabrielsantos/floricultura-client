@@ -8,11 +8,34 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
+.titleRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
 .title {
     font-size: 1.8rem;
     font-weight: 600;
-    margin-bottom: 2rem;
     color: #333;
+}
+
+.logoutButton {
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: #c62828;
+    cursor: pointer;
+    display: flex;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    transition: color 0.2s;
+}
+
+.logoutButton:hover {
+    color: #a30000;
 }
 
 .section {

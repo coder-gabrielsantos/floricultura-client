@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData, deleteAddress } from "../../api";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import { LogOut } from "iconoir-react";
 import styles from "./UserProfile.module.css";
 
 const UserProfile = () => {
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -26,19 +29,33 @@ const UserProfile = () => {
     if (loading) {
         return (
             <div className={styles.loadingWrapper}>
-                <p className={styles.loading}>Carregando dados...</p>
+                <p className={styles.loading}></p>
             </div>
         );
     }
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>Minha Conta</h2>
+            <div className={styles.titleRow}>
+                <h2 className={styles.title}>Minha Conta</h2>
+                <button
+                    className={styles.logoutButton}
+                    onClick={() => {
+                        logout();
+                        navigate("/");
+                    }}
+                >
+                    <LogOut style={{ marginRight: "0.5rem" }} />
+                    Sair da conta
+                </button>
+            </div>
 
             <div className={styles.section}>
                 <h3>Meus Dados</h3>
                 <p><strong>Nome:</strong> {profile.name}</p>
-                <p><strong>Email:</strong> {profile.email || profile.phone}</p>
+                <p>
+                    <strong>{profile.email ? "Email:" : "Telefone:"}</strong> {profile.email || profile.phone}
+                </p>
             </div>
 
             <div className={styles.section}>
