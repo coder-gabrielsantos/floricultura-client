@@ -43,6 +43,7 @@ const UserProfile = () => {
                     onClick={() => {
                         logout();
                         navigate("/");
+                        window.location.reload();
                     }}
                 >
                     <LogOut style={{ marginRight: "0.5rem" }} />

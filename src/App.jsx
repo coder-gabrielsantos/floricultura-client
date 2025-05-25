@@ -7,14 +7,21 @@ import UserProfile from "./pages/User/UserProfile.jsx";
 import UserAddress from "./pages/User/UserAddress.jsx";
 
 import NewProduct from "./pages/Admin/NewProduct.jsx";
+import CartModal from "./components/CartModal.jsx";
 
 function App() {
     const [showLogin, setShowLogin] = useState(false);
+    const [showCart, setShowCart] = useState(false);
 
     return (
         <Router>
-            <Navbar onLoginClick={() => setShowLogin(true)} />
+            <Navbar
+                onLoginClick={() => setShowLogin(true)}
+                onCartClick={() => setShowCart(true)}
+            />
+
             {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+            {showCart && <CartModal onClose={() => setShowCart(false)} />}
 
             <Routes>
                 <Route path="/" element={<Home />} />

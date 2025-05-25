@@ -42,6 +42,7 @@ const LoginModal = ({ onClose }) => {
                 login(user);
                 handleClose();
             }
+            window.location.reload();
         } catch (err) {
             console.error("Auth error:", err);
             setMessage(

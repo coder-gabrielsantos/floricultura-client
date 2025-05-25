@@ -1,74 +1,70 @@
-import { Link } from "react-router-dom";
-import { LogIn, User } from "iconoir-react";
-import { useAuth } from "../context/AuthContext.jsx";
+import { Cart, TransitionRight, LogIn } from "iconoir-react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-const Navbar = ({ onLoginClick }) => {
-    const { user } = useAuth()
+const Navbar = ({ onLoginClick, onCartClick }) => {
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const localUser = JSON.parse(localStorage.getItem("user"));
+        setUser(localUser);
+    }, []);
 
     return (
-        <nav style={styles.navbar}>
-            <div style={styles.container}>
-                <Link to="/" style={styles.logo}>
-                    Floricultura
-                </Link>
+        <div style={styles.navWrapper}>
+            <nav style={styles.navbar}>
+                <h1 onClick={() => navigate("/")} style={styles.logo}>Floricultura</h1>
 
-                <div style={styles.links}>
-                    <Link to="/" style={styles.link}>Início</Link>
-                    <Link to="/produtos" style={styles.link}>Produtos</Link>
-                    <Link to="/contato" style={styles.link}>Contato</Link>
+                <div style={styles.userActions}>
+                    {user && (
+                        <button style={styles.actionBtn} onClick={onCartClick}>
+                            <Cart style={styles.icon}/>
+                            <span className="action-label">Carrinho</span>
+                        </button>
+                    )}
+
+                    {user ? (
+                        <button style={styles.actionBtn} onClick={() => navigate("/perfil")}>
+                            <TransitionRight style={styles.icon}/>
+                            <span className="action-label">Minha Conta</span>
+                        </button>
+                    ) : (
+                        <div onClick={onLoginClick} style={styles.login}>
+                            <LogIn style={styles.icon}/>
+                            Entrar
+                        </div>
+                    )}
                 </div>
-
-                {user ? (
-                    <Link to="/perfil" style={styles.login}>
-                        <User style={styles.icon} />
-                        {user.name.split(" ")[0] || "Perfil"}
-                    </Link>
-                ) : (
-                    <div onClick={onLoginClick} style={styles.login}>
-                        <LogIn style={styles.icon} />
-                        Entrar
-                    </div>
-                )}
-            </div>
-        </nav>
+            </nav>
+        </div>
     );
 };
 
 export default Navbar;
 
 const styles = {
-    navbar: {
-        backgroundColor: "#ffffff",
-        borderBottom: "2px solid #e0e0e0",
-        padding: "0.75rem 0",
-        position: "sticky",
-        top: 0,
-        zIndex: 100
-    },
-    container: {
+    actionBtn: {
         alignItems: "center",
+        backgroundColor: "#fff",
+        border: "1px solid #ddd",
+        borderRadius: "10px",
+        color: "#333",
+        cursor: "pointer",
         display: "flex",
-        gap: "2rem",
-        justifyContent: "space-between",
-        margin: "0 auto",
-        maxWidth: "1440px",
-        padding: ".6rem 2rem"
+        fontSize: "0.95rem",
+        fontWeight: 500,
+        gap: "0.5rem",
+        padding: "0.4rem 0.8rem",
+        transition: "all 0.2s ease"
+    },
+    icon: {
+        fontSize: "1rem"
     },
     logo: {
-        color: "#2c2c2c",
-        fontSize: "1.4rem",
-        fontWeight: 600,
-        textDecoration: "none"
-    },
-    links: {
-        display: "flex",
-        gap: "2rem"
-    },
-    link: {
-        color: "#555",
-        fontSize: "1rem",
-        fontWeight: 500,
-        textDecoration: "none"
+        cursor: "pointer",
+        fontSize: "1.2rem",
+        fontWeight: "700"
     },
     login: {
         alignItems: "center",
@@ -80,7 +76,25 @@ const styles = {
         gap: "0.5rem",
         textDecoration: "none"
     },
-    icon: {
-        fontSize: "1.2rem"
+    navWrapper: {
+        backgroundColor: "#fff",
+        borderBottom: "1px solid #ccc",
+        position: "sticky",
+        top: 0,
+        zIndex: 100
+    },
+    navbar: {
+        alignItems: "center",
+        display: "flex",
+        justifyContent: "space-between",
+        margin: "0 auto",
+        maxWidth: "1440px",
+        padding: "1rem 2rem",
+        width: "100%"
+    },
+    userActions: {
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem"
     }
 };
