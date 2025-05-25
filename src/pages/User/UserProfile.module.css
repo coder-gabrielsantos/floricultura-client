@@ -126,6 +126,13 @@
     cursor: pointer;
 }
 
+.clientName {
+    color: #555;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
 .order {
     border: 1px solid #eee;
     border-radius: 10px;
