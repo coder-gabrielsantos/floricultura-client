@@ -25,16 +25,9 @@ const LoginModal = ({ onClose }) => {
         }, 300);
     };
 
-    const isIdentifierValid = () => form.identifier.includes("@");
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
-
-        if (!isIdentifierValid()) {
-            setMessage("Insira um e-mail válido com '@'.");
-            return;
-        }
 
         try {
             if (isRegistering) {
@@ -91,7 +84,7 @@ const LoginModal = ({ onClose }) => {
                     <input
                         type="text"
                         name="identifier"
-                        placeholder="Email"
+                        placeholder="Email ou Telefone"
                         value={form.identifier}
                         onChange={handleChange}
                         style={styles.input}

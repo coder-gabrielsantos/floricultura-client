@@ -63,7 +63,7 @@ const NewAddress = () => {
                 <form onSubmit={handleSubmit} className={styles.form}>
                     <div className={styles.row}>
                         <div className={`${styles.field} ${styles.streetField}`}>
-                            <label htmlFor="street">Rua</label>
+                            <label htmlFor="street">Endereço</label>
                             <input
                                 id="street"
                                 name="street"
