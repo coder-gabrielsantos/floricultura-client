@@ -62,6 +62,16 @@ export const deleteAddress = async (id, token) => {
     return response.data;
 };
 
+// GET CART
+export const getCart = async (token) => {
+    const response = await API.get("/cart", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
+};
+
 // CREATE PRODUCT
 export const createProduct = async (productData) => {
     const response = await API.post("/products", productData);
