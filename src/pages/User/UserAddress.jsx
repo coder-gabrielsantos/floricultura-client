@@ -77,6 +77,7 @@ const NewAddress = () => {
                             <input
                                 id="number"
                                 name="number"
+                                type="number"
                                 value={form.number}
                                 onChange={handleChange}
                                 required

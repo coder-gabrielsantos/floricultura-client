@@ -18,56 +18,56 @@ const mockProducts = [
         name: "Buquê com Girassol",
         description: "Um buquê alegre com girassóis e folhagens verdes. Ideal para iluminar qualquer ambiente.",
         price: 89.9,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 2,
         name: "Ramalhete Clássico",
         description: "Flores tradicionais em tons suaves para ocasiões elegantes.",
         price: 59.9,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 3,
         name: "Mini Orquídea",
         description: "Orquídea phalaenopsis em cachepô de cerâmica.",
         price: 45.0,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 4,
         name: "Arranjo Exuberante Tropical",
         description: "Arranjo vibrante com flores tropicais coloridas e estrutura alta, perfeito para centros de mesa ou recepções.",
         price: 159.9,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 5,
         name: "Cacto Decorativo",
         description: "Pequeno cacto com vaso decorativo. Ótimo para presentear amantes de plantas resistentes.",
         price: 24.9,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 6,
         name: "Rosas Vermelhas Luxo",
         description: "Buquê com 24 rosas vermelhas embaladas em papel especial.",
         price: 120.0,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 7,
         name: "Mix de Flores do Campo",
         description: "Combinação de flores do campo coloridas com folhagem rústica.",
         price: 69.5,
-        image: linkImage
+        images: linkImage
     },
     {
         id: 8,
         name: "Arranjo Elegante Branco e Verde",
         description: "Arranjo minimalista com flores brancas e verdes em base moderna.",
         price: 99.0,
-        image: linkImage
+        images: linkImage
     }
 ];
 
