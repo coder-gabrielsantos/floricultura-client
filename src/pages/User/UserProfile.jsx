@@ -118,16 +118,13 @@ const UserProfile = () => {
             )}
 
             <div className={styles.section}>
-                <h3>{profile.role === "admin" ? "Pedidos de Clientes" : "Meus Pedidos"}</h3>
+                <h3>Meus Pedidos</h3>
                 {orders.length > 0 ? (
                     orders.map((order) => (
                         <div key={order._id} className={styles.order}>
                             <div className={styles.orderHeader}>
                                 <span className={styles.orderNumber}>Pedido #{order._id}</span>
                                 <span className={styles.date}>{order.date}</span>
-                                {profile.role === "admin" && order.client?.name && (
-                                    <span className={styles.clientName}>Cliente: {order.client.name}</span>
-                                )}
                             </div>
                             <ul className={styles.productList}>
                                 {order.products.map((item, i) => (

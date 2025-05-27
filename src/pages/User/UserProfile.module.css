@@ -116,14 +116,14 @@
 }
 
 .addAddress {
-    margin-top: 1rem;
     background-color: #4caf50;
-    color: white;
-    padding: 0.6rem 1rem;
     border: none;
     border-radius: 8px;
-    font-weight: 500;
+    color: white;
     cursor: pointer;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1rem;
 }
 
 .clientName {
