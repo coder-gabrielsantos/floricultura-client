@@ -1,0 +1,205 @@
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.titleRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.section {
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.16); /* linha discreta */
+}
+
+.section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #4caf50;
+}
+
+.addressCard {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.addressActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.addressCard {
+    position: relative;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.addressTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.addressContent {
+    flex: 1;
+}
+
+.addressIndex {
+    font-size: 0.9rem;
+    color: #777;
+    white-space: nowrap;
+    margin-left: 1rem;
+}
+
+.editBtn,
+.deleteBtn {
+    border: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.editBtn {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.deleteBtn {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.newProduct {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    padding: 0.6rem 1rem;
+}
+
+.clientName {
+    color: #555;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+.order {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.order:hover {
+    background-color: #f4f4f4;
+}
+
+.expanded {
+    background-color: #f0fff0;
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.date {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.orderNumber {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+}
+
+.productList {
+    margin: 0.75rem 0 1rem;
+    padding-left: 1.5rem;
+    color: #444;
+}
+
+.productItem {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.orderInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.status {
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status.entregue {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.status.aguardando-pagamento {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.loadingWrapper {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.loading {
+    color: #555;
+    font-size: 1.1rem;
+}

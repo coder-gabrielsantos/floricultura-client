@@ -72,6 +72,14 @@ export const getCart = async (token) => {
     return response.data;
 };
 
+// GET ALL PRODUCTS
+export const getAllProducts = async (token) => {
+    const res = await API.get("/products", {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+};
+
 // GET ALL ORDERS
 export const getAllOrders = async (token) => {
     const res = await API.get("/orders", {
