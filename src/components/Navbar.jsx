@@ -1,4 +1,4 @@
-import { Cart, TransitionRight, LogIn } from "iconoir-react";
+import { Cart, TransitionRight, LogIn, OpenNewWindow } from "iconoir-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -17,11 +17,18 @@ const Navbar = ({ onLoginClick, onCartClick }) => {
                 <h1 onClick={() => navigate("/")} style={styles.logo}>Floricultura</h1>
 
                 <div style={styles.userActions}>
-                    {user && (
-                        <button style={styles.actionBtn} onClick={onCartClick}>
-                            <Cart style={styles.icon}/>
-                            <span className="action-label">Carrinho</span>
+                    {user && user.role === "admin" ? (
+                        <button style={styles.actionBtn} onClick={() => navigate("/painel")}>
+                            <OpenNewWindow style={styles.icon} />
+                            <span className="action-label">Painel do Administrador</span>
                         </button>
+                    ) : (
+                        user && (
+                            <button style={styles.actionBtn} onClick={onCartClick}>
+                                <Cart style={styles.icon} />
+                                <span className="action-label">Carrinho</span>
+                            </button>
+                        )
                     )}
 
                     {user ? (

@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
+import CartModal from "./components/CartModal.jsx";
 import UserProfile from "./pages/User/UserProfile.jsx";
 import UserAddress from "./pages/User/UserAddress.jsx";
-
+import AdminPanel from "./pages/Admin/AdminPanel.jsx";
 import NewProduct from "./pages/Admin/NewProduct.jsx";
-import CartModal from "./components/CartModal.jsx";
 
 function App() {
     const [showLogin, setShowLogin] = useState(false);
@@ -27,7 +27,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/perfil" element={<UserProfile />} />
                 <Route path="/endereco" element={<UserAddress />} />
-                <Route path="/admin" element={<NewProduct />} />
+                <Route path="/painel" element={<AdminPanel />} />
+                <Route path="/novo-produto" element={<NewProduct />} />
             </Routes>
         </Router>
     );
