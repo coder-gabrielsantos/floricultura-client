@@ -35,12 +35,25 @@ const NewProduct = () => {
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
+
         if (file) {
             const reader = new FileReader();
+
             reader.onloadend = () => {
-                setProductData((prev) => ({ ...prev, images: reader.result }));
+                const result = reader.result; // ex: data:image/jpeg;base64,/9j/...
+                const [meta, base64] = result.split("base64,");
+                const contentType = meta.split(":")[1].replace(";", "");
+
+                setProductData((prev) => ({
+                    ...prev,
+                    images: [{
+                        base64,
+                        contentType
+                    }]
+                }));
             };
-            reader.readAsDataURL(file); // ← converte imagem para base64
+
+            reader.readAsDataURL(file);
         }
     };
 
@@ -127,8 +140,12 @@ const NewProduct = () => {
                     />
                 </div>
 
-                {productData.images && (
-                    <img src={productData.images} alt="Prévia" className={styles.preview} />
+                {productData.images && productData.images.length > 0 && (
+                    <img
+                        src={`data:${productData.images[0].contentType};base64,${productData.images[0].base64}`}
+                        alt="Prévia"
+                        className={styles.preview}
+                    />
                 )}
 
                 <div className={styles.selectContainer}>
