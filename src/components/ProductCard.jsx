@@ -16,7 +16,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             onMouseLeave={() => setHovered(false)}
         >
             <div style={styles.imageWrapper}>
-                <img src={product.image} alt={product.name} style={styles.image} />
+                <img src={product.images} alt={product.name} style={styles.images} />
             </div>
 
             <div style={styles.content}>
@@ -52,7 +52,7 @@ const styles = {
         aspectRatio: "4 / 3",   // ← mantém proporção
         overflow: "hidden"
     },
-    image: {
+    images: {
         width: "100%",
         height: "100%",
         objectFit: "cover"

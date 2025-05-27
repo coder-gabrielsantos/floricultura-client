@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Select from "react-select";
+import { createProduct } from "../../api";
 import styles from "./NewProduct.module.css";
 
 const NewProduct = () => {
-    const [form, setForm] = useState({
+    const [productData, setProductData] = useState({
         name: "",
         description: "",
         price: "",
-        image: "",
+        stock: "",
+        images: "",
         catalogs: []
     });
 
@@ -26,7 +27,7 @@ const NewProduct = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({
+        setProductData((prev) => ({
             ...prev,
             [name]: value
         }));
@@ -37,20 +38,20 @@ const NewProduct = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setForm((prev) => ({ ...prev, image: reader.result }));
+                setProductData((prev) => ({ ...prev, images: reader.result }));
             };
             reader.readAsDataURL(file); // ← converte imagem para base64
-
-            console.log(reader)
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+
         try {
-            await axios.post("/api/products", form);
-            setMessage("Produto criado com sucesso!");
-            setForm({ name: "", description: "", price: "", image: "", catalogs: [] });
+            await createProduct(productData, token);
+            alert("Produto criado com sucesso!");
+            navigate("/painel");
         } catch (err) {
             console.error(err);
             setMessage("Erro ao criar produto.");
@@ -59,36 +60,63 @@ const NewProduct = () => {
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>Criar novo produto</h2>
+            <h2 className={styles.title}>Criar Novo Produto</h2>
             <form onSubmit={handleSubmit} className={styles.form}>
-                <input
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Nome do produto"
-                    className={styles.input}
-                />
+                <div className={styles.row}>
+                    <div className={`${styles.field} ${styles.nameField}`}>
+                        <label htmlFor="name">Nome do Produto</label>
+                        <input
+                            id="name"
+                            name="name"
+                            value={productData.name}
+                            onChange={handleChange}
+                            required
+                            className={styles.input}
+                        />
+                    </div>
 
-                <textarea
-                    name="description"
-                    value={form.description}
-                    onChange={handleChange}
-                    placeholder="Descrição"
-                    className={styles.input}
-                />
+                    <div className={`${styles.field} ${styles.stockField}`}>
+                        <label htmlFor="stock">Estoque</label>
+                        <input
+                            id="stock"
+                            name="stock"
+                            type="number"
+                            value={productData.stock}
+                            onChange={handleChange}
+                            required
+                            className={styles.input}
+                        />
+                    </div>
+                </div>
 
-                <input
-                    name="price"
-                    type="number"
-                    value={form.price}
-                    onChange={handleChange}
-                    placeholder="Preço"
-                    className={styles.input}
-                />
+                <div className={styles.field}>
+                    <label htmlFor="description">Descrição</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        value={productData.description}
+                        onChange={handleChange}
+                        required
+                        className={styles.input}
+                    />
+                </div>
+
+                <div className={styles.field}>
+                    <label htmlFor="price">Preço</label>
+                    <input
+                        id="price"
+                        name="price"
+                        type="number"
+                        value={productData.price}
+                        onChange={handleChange}
+                        required
+                        className={styles.input}
+                    />
+                </div>
 
                 <div className={styles.imageInputWrapper}>
                     <label htmlFor="imageInput" className={styles.imageInputLabel}>
-                        {form.image ? "Imagem selecionada" : "Clique para escolher uma imagem"}
+                        {productData.images ? "Imagem selecionada" : "Clique para escolher uma imagem"}
                     </label>
                     <input
                         id="imageInput"
@@ -99,12 +127,8 @@ const NewProduct = () => {
                     />
                 </div>
 
-                {form.image && (
-                    <img
-                        src={form.image}
-                        alt="Prévia"
-                        className={styles.preview}
-                    />
+                {productData.images && (
+                    <img src={productData.images} alt="Prévia" className={styles.preview} />
                 )}
 
                 <div className={styles.selectContainer}>
@@ -117,10 +141,10 @@ const NewProduct = () => {
                             label: c.name
                         }))}
                         value={catalogs
-                            .filter((c) => form.catalogs.includes(c._id))
+                            .filter((c) => productData.catalogs.includes(c._id))
                             .map((c) => ({ value: c._id, label: c.name }))}
                         onChange={(selected) =>
-                            setForm((prev) => ({
+                            setProductData((prev) => ({
                                 ...prev,
                                 catalogs: selected.map((s) => s.value)
                             }))
