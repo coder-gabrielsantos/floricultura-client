@@ -58,7 +58,7 @@ const UserProfile = () => {
                         window.location.reload();
                     }}
                 >
-                    <LogOut style={{ marginRight: "0.5rem" }} />
+                    <LogOut style={{ marginRight: "0.5rem" }}/>
                     Sair da conta
                 </button>
             </div>
@@ -117,36 +117,38 @@ const UserProfile = () => {
                 </div>
             )}
 
-            <div className={styles.section}>
-                <h3>Meus Pedidos</h3>
-                {orders.length > 0 ? (
-                    orders.map((order) => (
-                        <div key={order._id} className={styles.order}>
-                            <div className={styles.orderHeader}>
-                                <span className={styles.orderNumber}>Pedido #{order._id}</span>
-                                <span className={styles.date}>{order.date}</span>
-                            </div>
-                            <ul className={styles.productList}>
-                                {order.products.map((item, i) => (
-                                    <li key={i} className={styles.productItem}>
-                                        {item.product.name} x{item.quantity}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className={styles.orderInfo}>
-                                <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
-                                <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
+            {profile.role !== "admin" && (
+                <div className={styles.section}>
+                    <h3>Meus Pedidos</h3>
+                    {orders.length > 0 ? (
+                        orders.map((order) => (
+                            <div key={order._id} className={styles.order}>
+                                <div className={styles.orderHeader}>
+                                    <span className={styles.orderNumber}>Pedido #{order._id}</span>
+                                    <span className={styles.date}>{order.date}</span>
+                                </div>
+                                <ul className={styles.productList}>
+                                    {order.products.map((item, i) => (
+                                        <li key={i} className={styles.productItem}>
+                                            {item.product.name} x{item.quantity}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className={styles.orderInfo}>
+                                    <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
+                                    <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
                                     {order.status}
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    <p style={{ color: "#777", marginTop: "1rem" }}>
-                        Nenhum pedido encontrado.
-                    </p>
-                )}
-            </div>
+                        ))
+                    ) : (
+                        <p style={{ color: "#777", marginTop: "1rem" }}>
+                            Nenhum pedido encontrado.
+                        </p>
+                    )}
+                </div>
+            )}
 
             {confirming && (
                 <ConfirmModal

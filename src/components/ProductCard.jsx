@@ -3,6 +3,12 @@ import { useState } from "react";
 const ProductCard = ({ product, onAddToCart }) => {
     const [hovered, setHovered] = useState(false);
 
+    // Determina a imagem principal
+    const mainImage =
+        Array.isArray(product.images) && product.images.length > 0
+            ? product.images[0]
+            : null;
+
     return (
         <div
             style={{
@@ -16,7 +22,15 @@ const ProductCard = ({ product, onAddToCart }) => {
             onMouseLeave={() => setHovered(false)}
         >
             <div style={styles.imageWrapper}>
-                <img src={product.images} alt={product.name} style={styles.images} />
+                {mainImage ? (
+                    <img
+                        src={mainImage}
+                        alt={product.name}
+                        style={styles.images}
+                    />
+                ) : (
+                    <div style={styles.imageFallback}>Sem imagem</div>
+                )}
             </div>
 
             <div style={styles.content}>
@@ -49,7 +63,7 @@ const styles = {
     },
     imageWrapper: {
         width: "100%",
-        aspectRatio: "4 / 3",   // ← mantém proporção
+        aspectRatio: "4 / 3",
         overflow: "hidden"
     },
     images: {
@@ -57,34 +71,41 @@ const styles = {
         height: "100%",
         objectFit: "cover"
     },
+    imageFallback: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#f0f0f0",
+        color: "#777",
+        fontSize: "0.9rem"
+    },
     content: {
         display: "flex",
         flexDirection: "column",
         padding: "1rem",
         flex: 1
     },
-
     name: {
         fontSize: "1.1rem",
         fontWeight: 600,
-        marginBottom: "0.5rem", // ← espaço abaixo do título
+        marginBottom: "0.5rem",
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis"
     },
-
     description: {
         fontSize: "0.9rem",
         color: "#555",
         lineHeight: "1.3rem",
-        marginBottom: "1rem", // ← espaço abaixo da descrição
+        marginBottom: "1rem",
         overflow: "hidden",
         textOverflow: "ellipsis",
         display: "-webkit-box",
         WebkitBoxOrient: "vertical",
         WebkitLineClamp: 3
     },
-
     footer: {
         display: "flex",
         justifyContent: "space-between",

@@ -2,8 +2,14 @@ import { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard";
 import Select from "react-select";
 import styles from "./Home.module.css";
+import { getAllProducts } from "../../api";
 
-const linkImage = "https://content.clara.es/medio/2022/10/04/plantas-con-flores-rojas-rosa_8afd8936_1280x1820.jpg";
+const bufferToBase64 = (buffer) => {
+    if (!buffer?.data || !Array.isArray(buffer.data)) return null;
+
+    const binary = buffer.data.map(byte => String.fromCharCode(byte)).join("");
+    return window.btoa(binary);
+};
 
 const mockCatalogs = [
     { _id: "all", name: "Todos os catálogos" },
@@ -12,77 +18,44 @@ const mockCatalogs = [
     { _id: "maes", name: "Dia das Mães" }
 ];
 
-const mockProducts = [
-    {
-        id: 1,
-        name: "Buquê com Girassol",
-        description: "Um buquê alegre com girassóis e folhagens verdes. Ideal para iluminar qualquer ambiente.",
-        price: 89.9,
-        images: linkImage
-    },
-    {
-        id: 2,
-        name: "Ramalhete Clássico",
-        description: "Flores tradicionais em tons suaves para ocasiões elegantes.",
-        price: 59.9,
-        images: linkImage
-    },
-    {
-        id: 3,
-        name: "Mini Orquídea",
-        description: "Orquídea phalaenopsis em cachepô de cerâmica.",
-        price: 45.0,
-        images: linkImage
-    },
-    {
-        id: 4,
-        name: "Arranjo Exuberante Tropical",
-        description: "Arranjo vibrante com flores tropicais coloridas e estrutura alta, perfeito para centros de mesa ou recepções.",
-        price: 159.9,
-        images: linkImage
-    },
-    {
-        id: 5,
-        name: "Cacto Decorativo",
-        description: "Pequeno cacto com vaso decorativo. Ótimo para presentear amantes de plantas resistentes.",
-        price: 24.9,
-        images: linkImage
-    },
-    {
-        id: 6,
-        name: "Rosas Vermelhas Luxo",
-        description: "Buquê com 24 rosas vermelhas embaladas em papel especial.",
-        price: 120.0,
-        images: linkImage
-    },
-    {
-        id: 7,
-        name: "Mix de Flores do Campo",
-        description: "Combinação de flores do campo coloridas com folhagem rústica.",
-        price: 69.5,
-        images: linkImage
-    },
-    {
-        id: 8,
-        name: "Arranjo Elegante Branco e Verde",
-        description: "Arranjo minimalista com flores brancas e verdes em base moderna.",
-        price: 99.0,
-        images: linkImage
-    }
-];
-
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedCatalog, setSelectedCatalog] = useState("all");
 
     useEffect(() => {
-        setProducts(mockProducts);
+        const fetchData = async () => {
+            try {
+                const data = await getAllProducts();
+
+                const processed = data.map((product) => {
+                    const images = (product.images || [])
+                        .map((img) => {
+                            const base64 = bufferToBase64(img.data);
+                            return base64
+                                ? `data:${img.contentType};base64,${base64}`
+                                : null;
+                        })
+                        .filter(Boolean);
+
+                    return {
+                        ...product,
+                        images
+                    };
+                });
+
+                setProducts(processed);
+            } catch (err) {
+                console.error("Erro ao carregar produtos:", err);
+            }
+        };
+
+        fetchData();
     }, []);
 
     const filteredProducts =
         selectedCatalog === "all"
             ? products
-            : products.filter((p) => p.catalogs.includes(selectedCatalog));
+            : products.filter((p) => p.catalogs?.includes(selectedCatalog));
 
     return (
         <div className={styles.wrapper}>
@@ -107,7 +80,11 @@ const Home = () => {
 
                 <div className={styles.grid}>
                     {filteredProducts.map((p) => (
-                        <ProductCard key={p.id} product={p} onAddToCart={() => {}} />
+                        <ProductCard
+                            key={p._id}
+                            product={p}
+                            onAddToCart={() => {}}
+                        />
                     ))}
                 </div>
             </div>
@@ -115,4 +92,4 @@ const Home = () => {
     );
 };
 
-    export default Home;
+export default Home;

@@ -80,18 +80,20 @@ export const getAllProducts = async (token) => {
     return res.data;
 };
 
+// CREATE PRODUCT
+export const createProduct = async (productData, token) => {
+    const response = await API.post("/products/new-product", productData, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+};
+
 // GET ALL ORDERS
 export const getAllOrders = async (token) => {
     const res = await API.get("/orders", {
         headers: { Authorization: `Bearer ${token}` }
     });
     return res.data;
-};
-
-// CREATE PRODUCT
-export const createProduct = async (productData) => {
-    const response = await API.post("/products", productData);
-    return response.data;
 };
 
 // GET CATALOGS
