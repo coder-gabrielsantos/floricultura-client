@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { createProduct } from "../../api";
 import styles from "./NewProduct.module.css";
 
 const NewProduct = () => {
+    const navigate = useNavigate();
+
     const [productData, setProductData] = useState({
         name: "",
         description: "",
@@ -63,7 +66,6 @@ const NewProduct = () => {
 
         try {
             await createProduct(productData, token);
-            alert("Produto criado com sucesso!");
             navigate("/painel");
         } catch (err) {
             console.error(err);
