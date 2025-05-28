@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { createProduct } from "../../api/_index.js";
+import { createProduct, getCatalogs } from "../../api/_index.js";
 import styles from "./NewProduct.module.css";
 
 const NewProduct = () => {
@@ -20,12 +20,9 @@ const NewProduct = () => {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        // Mock de catálogos por enquanto
-        setCatalogs([
-            { _id: "maes", name: "Dia das Mães" },
-            { _id: "romantico", name: "Romântico" },
-            { _id: "aniversario", name: "Aniversário" }
-        ]);
+        getCatalogs()
+            .then(setCatalogs)
+            .catch((err) => console.error("Erro ao buscar catálogos: ", err));
     }, []);
 
     const handleChange = (e) => {
