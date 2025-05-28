@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Xmark } from "iconoir-react";
 import {
     getCatalogs,
     createCatalog,
@@ -111,7 +112,7 @@ const CatalogManager = () => {
                                     onClick={() => removeCatalog(cat._id)}
                                     style={styles.tagRemove}
                                 >
-                                    ×
+                                    <Xmark style={styles.icon}/>
                                 </button>
                             </>
                         )}
@@ -141,7 +142,7 @@ const styles = {
         borderRadius: "8px",
         flex: 1,
         fontSize: "1rem",
-        padding: "0.5rem",
+        padding: "0.8rem",
         transition: "border-color 0.2s ease",
     },
     inputRow: {
@@ -197,6 +198,7 @@ const styles = {
         border: "none",
         color: "#444",
         cursor: "pointer",
+        display: "flex",
         fontSize: "1rem",
         fontWeight: "bold",
         lineHeight: "1",
@@ -214,6 +216,9 @@ const styles = {
         height: "26px",
         lineHeight: "1",
         padding: "0.2rem 0.6rem",
+    },
+    icon: {
+        fontSize: ".8rem"
     }
 };
 
