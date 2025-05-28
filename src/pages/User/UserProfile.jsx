@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getAllOrders } from "../../api";
+import { getUserData, deleteAddress, getAllOrders } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { LogOut } from "iconoir-react";

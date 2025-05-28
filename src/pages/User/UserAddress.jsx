@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createAddress, getAddressById, updateAddress } from "../../api";
+import { createAddress, getAddressById, updateAddress } from "../../api/_index.js";
 import styles from "./UserAddress.module.css";
 
 const NewAddress = () => {

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard";
 import Select from "react-select";
 import styles from "./Home.module.css";
-import { getAllProducts } from "../../api";
+import { getAllProducts } from "../../api/_index.js";
 
 const bufferToBase64 = (buffer) => {
     if (!buffer?.data || !Array.isArray(buffer.data)) return null;

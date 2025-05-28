@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { createProduct } from "../../api";
+import { createProduct } from "../../api/_index.js";
 import styles from "./NewProduct.module.css";
 
 const NewProduct = () => {

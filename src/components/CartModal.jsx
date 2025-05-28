@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Trash, XmarkSquare } from "iconoir-react";
-import { getCart } from "../api";
+import { getCart } from "../api/_index.js";
 
 const mockCart = {
     items: [

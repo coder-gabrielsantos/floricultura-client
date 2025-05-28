@@ -1,0 +1,27 @@
+import API from "./base";
+
+// Log in a user
+export const loginUser = async (credentials) => {
+    const response = await API.post("/users/login", credentials);
+    return response.data;
+};
+
+// Register a new user
+export const registerUser = async (data) => {
+    const response = await API.post("/users/register", data);
+    return response.data;
+};
+
+// Get the currently logged-in user's data
+export const getUserData = async () => {
+    const response = await API.get("/users/me", {
+        headers: {
+            Authorization: `Bearer ${
+                localStorage.getItem("user")
+                    ? JSON.parse(localStorage.getItem("user")).token
+                    : ""
+            }`
+        }
+    });
+    return response.data;
+};

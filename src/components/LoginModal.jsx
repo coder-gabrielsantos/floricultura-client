@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loginUser, registerUser } from "../api";
+import { loginUser, registerUser } from "../api/_index.js";
 import { useAuth } from "../context/AuthContext";
 
 const LoginModal = ({ onClose }) => {
