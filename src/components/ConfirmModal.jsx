@@ -1,11 +1,13 @@
-const ConfirmModal = ({ onClose, onConfirm, message }) => {
+const ConfirmModal = ({ onCancel, onClose, onConfirm, message }) => {
+    const handleClose = onCancel || onClose;
+
     return (
-        <div style={styles.overlay} onClick={onClose}>
+        <div style={styles.overlay} onClick={handleClose}>
             <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <h2 style={styles.title}>Confirmação</h2>
                 <p style={styles.text}>{message}</p>
                 <div style={styles.buttons}>
-                    <button style={styles.cancel} onClick={onClose}>Cancelar</button>
+                    <button style={styles.cancel} onClick={handleClose}>Cancelar</button>
                     <button style={styles.confirm} onClick={onConfirm}>Confirmar</button>
                 </div>
             </div>
