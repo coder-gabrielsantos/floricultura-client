@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllOrders, getAllProducts, deleteProduct } from "../../api/index.js";
-import styles from "./AdminPanel.module.css";
+import {
+    getAllOrders,
+    getAllProducts,
+    deleteProduct
+} from "../../api/_index.js";
+import CatalogManager from "../../components/CatalogManager.jsx";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
+import styles from "./AdminPanel.module.css";
 
 const PRODUCTS_PER_PAGE = 4;
 
@@ -10,7 +15,7 @@ const bufferToBase64 = (buffer) => {
     if (!buffer?.data || !Array.isArray(buffer.data)) return null;
 
     let binary = "";
-    const chunkSize = 8192; // evita stack overflow
+    const chunkSize = 8192;
     for (let i = 0; i < buffer.data.length; i += chunkSize) {
         const chunk = buffer.data.slice(i, i + chunkSize);
         binary += String.fromCharCode(...chunk);
@@ -21,16 +26,15 @@ const bufferToBase64 = (buffer) => {
 
 const AdminPanel = () => {
     const [products, setProducts] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [productToDelete, setProductToDelete] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
-
         Promise.all([
             getAllProducts(token),
             getAllOrders(token)
@@ -41,7 +45,7 @@ const AdminPanel = () => {
                 setLoading(false);
             })
             .catch((err) => {
-                console.error("Erro ao carregar dados do painel:", err);
+                console.error("Erro ao carregar dados:", err);
                 setLoading(false);
             });
     }, []);
@@ -51,23 +55,7 @@ const AdminPanel = () => {
         currentPage * PRODUCTS_PER_PAGE
     );
 
-    const confirmDelete = (product) => {
-        setProductToDelete(product);
-        setShowConfirmModal(true);
-    };
-
-    const handleDelete = async () => {
-        const token = JSON.parse(localStorage.getItem("user"))?.token;
-        try {
-            await deleteProduct(productToDelete._id, token);
-            setProducts((prev) => prev.filter((p) => p._id !== productToDelete._id));
-        } catch (err) {
-            console.error("Erro ao excluir produto:", err);
-        } finally {
-            setShowConfirmModal(false);
-            setProductToDelete(null);
-        }
-    };
+    const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
     if (loading) {
         return (
@@ -76,8 +64,6 @@ const AdminPanel = () => {
             </div>
         );
     }
-
-    const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
     return (
         <div className={styles.container}>
@@ -117,6 +103,8 @@ const AdminPanel = () => {
                 )}
             </div>
 
+            <CatalogManager />
+
             <div className={styles.section}>
                 <h3>Produtos Cadastrados</h3>
 
@@ -126,15 +114,13 @@ const AdminPanel = () => {
                             <div className={styles.productHeader}>
                                 <div className={styles.productInfo}>
                                     <h4 className={styles.productName}>{prod.name}</h4>
-                                    <p className={styles.productPrice}>
-                                        <strong></strong> R$ {prod.price.toFixed(2)}
-                                    </p>
+                                    <p className={styles.productPrice}>R$ {prod.price.toFixed(2)}</p>
                                     <p
                                         className={`${styles.productStock} ${
                                             prod.stock > 0 ? styles.inStock : styles.outOfStock
                                         }`}
                                     >
-                                        <strong></strong> {prod.stock} unidade{prod.stock !== 1 ? "s" : ""}
+                                        {prod.stock} unidade{prod.stock !== 1 ? "s" : ""}
                                     </p>
                                 </div>
 
@@ -156,7 +142,10 @@ const AdminPanel = () => {
                                 </button>
                                 <button
                                     className={styles.deleteBtn}
-                                    onClick={() => confirmDelete(prod)}
+                                    onClick={() => {
+                                        setProductToDelete(prod);
+                                        setShowConfirmModal(true);
+                                    }}
                                 >
                                     Excluir
                                 </button>
@@ -192,7 +181,18 @@ const AdminPanel = () => {
                 <ConfirmModal
                     message={`Deseja realmente excluir o produto "${productToDelete?.name}"?`}
                     onCancel={() => setShowConfirmModal(false)}
-                    onConfirm={handleDelete}
+                    onConfirm={async () => {
+                        const token = JSON.parse(localStorage.getItem("user"))?.token;
+                        try {
+                            await deleteProduct(productToDelete._id, token);
+                            setProducts(products.filter((p) => p._id !== productToDelete._id));
+                        } catch (err) {
+                            console.error("Erro ao excluir produto:", err);
+                        } finally {
+                            setShowConfirmModal(false);
+                            setProductToDelete(null);
+                        }
+                    }}
                 />
             )}
         </div>
