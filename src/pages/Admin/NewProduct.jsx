@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { createProduct, getCatalogs } from "../../api/_index.js";
+import { getCatalogs, createProduct, updateProduct, getProductById } from "../../api/_index";
 import styles from "./NewProduct.module.css";
 
 const NewProduct = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const [productData, setProductData] = useState({
         name: "",
@@ -18,12 +19,49 @@ const NewProduct = () => {
 
     const [catalogs, setCatalogs] = useState([]);
     const [message, setMessage] = useState("");
+    const isEdit = !!id;
 
     useEffect(() => {
-        getCatalogs()
-            .then(setCatalogs)
-            .catch((err) => console.error("Erro ao buscar catálogos: ", err));
-    }, []);
+        const fetchData = async () => {
+            try {
+                const cats = await getCatalogs();
+                setCatalogs(cats);
+
+                if (isEdit) {
+                    const token = JSON.parse(localStorage.getItem("user"))?.token;
+                    const product = await getProductById(id, token);
+
+                    let imageData = "";
+
+                    if (product.images?.length > 0) {
+                        const img = product.images[0];
+                        const base64 = btoa(
+                            new Uint8Array(img.data.data)
+                                .reduce((data, byte) => data + String.fromCharCode(byte), "")
+                        );
+
+                        imageData = [{
+                            base64,
+                            contentType: img.contentType
+                        }];
+                    }
+
+                    setProductData({
+                        name: product.name,
+                        description: product.description,
+                        price: product.price,
+                        stock: product.stock,
+                        images: imageData,
+                        catalogs: product.catalogs?.map((c) => c._id) || []
+                    });
+                }
+            } catch (err) {
+                console.error("Erro ao carregar dados:", err);
+            }
+        };
+
+        fetchData();
+    }, [isEdit, id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,17 +100,23 @@ const NewProduct = () => {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
 
         try {
-            await createProduct(productData, token);
+            if (isEdit) {
+                await updateProduct(id, productData, token);
+            } else {
+                await createProduct(productData, token);
+            }
             navigate("/painel");
         } catch (err) {
             console.error(err);
-            setMessage("Erro ao criar produto.");
+            setMessage("Erro ao salvar produto.");
         }
     };
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>Criar Novo Produto</h2>
+            <h2 className={styles.title}>
+                {isEdit ? "Editar Produto" : "Criar Novo Produto"}
+            </h2>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.row}>
                     <div className={`${styles.field} ${styles.nameField}`}>
@@ -156,9 +200,13 @@ const NewProduct = () => {
                             value: c._id,
                             label: c.name
                         }))}
-                        value={catalogs
-                            .filter((c) => productData.catalogs.includes(c._id))
-                            .map((c) => ({ value: c._id, label: c.name }))}
+                        value={
+                            Array.isArray(productData.catalogs)
+                                ? catalogs
+                                    .filter((c) => productData.catalogs.includes(c._id))
+                                    .map((c) => ({ value: c._id, label: c.name }))
+                                : []
+                        }
                         onChange={(selected) =>
                             setProductData((prev) => ({
                                 ...prev,
@@ -169,7 +217,7 @@ const NewProduct = () => {
                 </div>
 
                 <button type="submit" className={styles.button}>
-                    Criar Produto
+                    {isEdit ? "Atualizar Produto" : "Criar Produto"}
                 </button>
             </form>
 

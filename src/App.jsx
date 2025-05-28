@@ -29,6 +29,7 @@ function App() {
                 <Route path="/endereco" element={<UserAddress />} />
                 <Route path="/painel" element={<AdminPanel />} />
                 <Route path="/novo-produto" element={<NewProduct />} />
+                <Route path="/editar-produto/:id" element={<NewProduct />} />
             </Routes>
         </Router>
     );
