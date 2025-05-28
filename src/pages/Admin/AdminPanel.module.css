@@ -24,7 +24,7 @@
 .section {
     margin-bottom: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.16); /* linha discreta */
+    border-top: 1px solid rgba(0, 0, 0, 0.16);
 }
 
 .section:first-of-type {
@@ -51,15 +51,6 @@
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
-}
-
-.addressCard {
-    position: relative;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1rem;
 }
 
 .addressTop {
