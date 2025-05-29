@@ -37,7 +37,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
         Promise.all([
-            getAllProducts(token),
+            getAllProducts(null, token),
             getAllOrders(token)
         ])
             .then(([prodList, orderList]) => {
