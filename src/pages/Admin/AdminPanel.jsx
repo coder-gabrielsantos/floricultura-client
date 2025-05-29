@@ -7,6 +7,7 @@ import {
 } from "../../api/_index.js";
 import CatalogManager from "../../components/CatalogManager.jsx";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
+import Loader from "../../components/Loader.jsx";
 import styles from "./AdminPanel.module.css";
 
 const PRODUCTS_PER_PAGE = 4;
@@ -57,13 +58,12 @@ const AdminPanel = () => {
 
     const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
-    if (loading) {
+    if (!loading) {
         return (
-            <div className={styles.loadingWrapper}>
-                <p className={styles.loading}>Carregando dados do painel...</p>
-            </div>
+            <Loader/>
         );
     }
+
 
     return (
         <div className={styles.container}>

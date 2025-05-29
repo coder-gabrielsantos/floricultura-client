@@ -183,18 +183,6 @@
     color: #f57c00;
 }
 
-.loadingWrapper {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-.loading {
-    color: #555;
-    font-size: 1.1rem;
-}
-
 .productHeader {
     display: flex;
     justify-content: space-between;
