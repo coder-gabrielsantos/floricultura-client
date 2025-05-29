@@ -21,7 +21,7 @@ const CatalogsPage = () => {
     }, []);
 
     const handleClick = (catalogId) => {
-        navigate(`/?catalog=${catalogId}`);
+        navigate(`/produtos?catalog=${catalogId}`);
     };
 
     const getImage = (catalog) => {

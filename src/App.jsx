@@ -21,12 +21,12 @@ function App() {
                 onCartClick={() => setShowCart(true)}
             />
 
-            {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-            {showCart && <CartModal onClose={() => setShowCart(false)} />}
+            {showLogin && <LoginModal onClose={() => setShowLogin(false)}/>}
+            {showCart && <CartModal onClose={() => setShowCart(false)}/>}
 
             <Routes>
-                <Route path="/catalogos" element={<CatalogsPage />} />
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<CatalogsPage />} />
+                <Route path="/produtos" element={<Home />} />
                 <Route path="/perfil" element={<UserProfile />} />
                 <Route path="/endereco" element={<UserAddress />} />
                 <Route path="/painel" element={<AdminPanel />} />
