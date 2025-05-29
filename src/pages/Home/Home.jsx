@@ -1,38 +1,35 @@
-import { useState, useEffect } from "react";
-import Select from "react-select";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { getAllProducts } from "../../api/_index";
 import ProductCard from "../../components/ProductCard";
-import Loader from "../../components/Loader";
 import styles from "./Home.module.css";
-import { getAllProducts } from "../../api/_index.js";
+import Loader from "../../components/Loader";
 
 const bufferToBase64 = (buffer) => {
-    if (!buffer?.data || !Array.isArray(buffer.data)) return null;
-
-    const binary = buffer.data.map(byte => String.fromCharCode(byte)).join("");
+    if (!buffer) return null;
+    const binary = new Uint8Array(buffer).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+    );
     return window.btoa(binary);
 };
 
-const mockCatalogs = [
-    { _id: "all", name: "Todos os catálogos" },
-    { _id: "romantico", name: "Romântico" },
-    { _id: "aniversario", name: "Aniversário" },
-    { _id: "maes", name: "Dia das Mães" }
-];
-
 const Home = () => {
     const [products, setProducts] = useState([]);
-    const [selectedCatalog, setSelectedCatalog] = useState("all");
     const [loading, setLoading] = useState(true);
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllProducts();
+                setLoading(true);
+                const catalogId = searchParams.get("catalog");
+                const data = await getAllProducts(catalogId);
 
                 const processed = data.map((product) => {
                     const images = (product.images || [])
                         .map((img) => {
-                            const base64 = bufferToBase64(img.data);
+                            const base64 = bufferToBase64(img.data?.data);
                             return base64
                                 ? `data:${img.contentType};base64,${base64}`
                                 : null;
@@ -54,46 +51,25 @@ const Home = () => {
         };
 
         fetchData();
-    }, []);
-
-    const filteredProducts =
-        selectedCatalog === "all"
-            ? products
-            : products.filter((p) => p.catalogs?.includes(selectedCatalog));
+    }, [searchParams]);
 
     if (loading) return <Loader />;
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <h1 className={styles.title}>Flores para todas as ocasiões</h1>
-
-                    <div className={styles.selectWrapper}>
-                        <Select
-                            options={mockCatalogs.map((c) => ({
-                                value: c._id,
-                                label: c.name
-                            }))}
-                            value={mockCatalogs.find((c) => c._id === selectedCatalog)}
-                            onChange={(option) => setSelectedCatalog(option.value)}
-                            className={styles.select}
-                            classNamePrefix="react-select"
-                            isSearchable={false}
-                        />
-                    </div>
-                </div>
-
+        <div className={styles.container}>
+            {products.length === 0 ? (
+                <p className={styles.empty}>Nenhum produto encontrado.</p>
+            ) : (
                 <div className={styles.grid}>
-                    {filteredProducts.map((p) => (
+                    {products.map((product) => (
                         <ProductCard
-                            key={p._id}
-                            product={p}
+                            key={product._id}
+                            product={product}
                             onAddToCart={() => {}}
                         />
                     ))}
                 </div>
-            </div>
+            )}
         </div>
     );
 };

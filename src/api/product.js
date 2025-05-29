@@ -1,11 +1,10 @@
 import API from "./base";
 
 // Get all products
-export const getAllProducts = async (token) => {
-    const res = await API.get("/products", {
-        headers: { Authorization: `Bearer ${token}` }
-    });
-    return res.data;
+export const getAllProducts = async (catalogId = null) => {
+    const url = catalogId ? `/products?catalog=${catalogId}` : "/products";
+    const response = await API.get(url);
+    return response.data;
 };
 
 // Create a new product

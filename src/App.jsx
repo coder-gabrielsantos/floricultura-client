@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import CatalogsPage from "./pages/Catalogs/CatalogsPage";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar";
 import LoginModal from "./components/LoginModal";
@@ -24,6 +25,7 @@ function App() {
             {showCart && <CartModal onClose={() => setShowCart(false)} />}
 
             <Routes>
+                <Route path="/catalogos" element={<CatalogsPage />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/perfil" element={<UserProfile />} />
                 <Route path="/endereco" element={<UserAddress />} />
