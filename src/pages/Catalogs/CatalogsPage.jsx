@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCatalogs } from "../../api/_index";
+import defaultCatalogImage from "../../assets/default-catalog.jpeg";
 import styles from "./CatalogsPage.module.css";
 
 const CatalogsPage = () => {
@@ -11,7 +12,15 @@ const CatalogsPage = () => {
         const fetchCatalogs = async () => {
             try {
                 const data = await getCatalogs();
-                setCatalogs(data);
+
+                const defaultCatalog = {
+                    _id: "all",
+                    name: "Todos os Produtos",
+                    image: defaultCatalogImage,
+                    products: []
+                };
+
+                setCatalogs([defaultCatalog, ...data]);
             } catch (err) {
                 console.error("Erro ao carregar catálogos:", err);
             }
@@ -21,10 +30,16 @@ const CatalogsPage = () => {
     }, []);
 
     const handleClick = (catalogId) => {
-        navigate(`/produtos?catalog=${catalogId}`);
+        if (catalogId === "all") {
+            navigate("/produtos");
+        } else {
+            navigate(`/produtos?catalog=${catalogId}`);
+        }
     };
 
     const getImage = (catalog) => {
+        if (catalog._id === "all") return catalog.image;
+
         const firstProduct = catalog.products?.[0];
         if (!firstProduct?.images?.[0]?.data?.data) return null;
 
