@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData, deleteAddress, getAllOrders } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
+import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { LogOut } from "iconoir-react";
 import styles from "./UserProfile.module.css";
@@ -35,13 +36,7 @@ const UserProfile = () => {
             });
     }, []);
 
-    if (loading) {
-        return (
-            <div className={styles.loadingWrapper}>
-                <p className={styles.loading}>Carregando...</p>
-            </div>
-        );
-    }
+    if (loading) return <Loader />;
 
     return (
         <div className={styles.container}>

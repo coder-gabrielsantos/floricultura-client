@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import ProductCard from "../../components/ProductCard";
 import Select from "react-select";
+import ProductCard from "../../components/ProductCard";
+import Loader from "../../components/Loader";
 import styles from "./Home.module.css";
 import { getAllProducts } from "../../api/_index.js";
 
@@ -21,6 +22,7 @@ const mockCatalogs = [
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedCatalog, setSelectedCatalog] = useState("all");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,6 +48,8 @@ const Home = () => {
                 setProducts(processed);
             } catch (err) {
                 console.error("Erro ao carregar produtos:", err);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -56,6 +60,8 @@ const Home = () => {
         selectedCatalog === "all"
             ? products
             : products.filter((p) => p.catalogs?.includes(selectedCatalog));
+
+    if (loading) return <Loader />;
 
     return (
         <div className={styles.wrapper}>

@@ -58,12 +58,7 @@ const AdminPanel = () => {
 
     const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
-    if (!loading) {
-        return (
-            <Loader/>
-        );
-    }
-
+    if (loading) return <Loader />;
 
     return (
         <div className={styles.container}>
