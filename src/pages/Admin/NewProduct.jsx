@@ -153,7 +153,7 @@ const NewProduct = () => {
                         value={productData.description}
                         onChange={handleChange}
                         required
-                        className={styles.input}
+                        className={styles.textarea}
                     />
                 </div>
 
