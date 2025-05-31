@@ -123,7 +123,7 @@ const CatalogManager = () => {
                                     style={styles.coverImage}
                                 />
                             ) : (
-                                <span style={styles.noCover}>Sem capa</span>
+                                <span style={styles.noCover}>...</span>
                             )}
                             <input
                                 id={`coverInput-${cat._id}`}
@@ -266,6 +266,7 @@ const styles = {
         color: "#333",
         cursor: "pointer",
         lineHeight: "1",
+        margin: "0 20px 0 5px"
     },
     tagRemove: {
         background: "none",
