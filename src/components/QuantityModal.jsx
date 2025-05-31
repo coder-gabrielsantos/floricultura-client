@@ -15,6 +15,7 @@ const QuantityModal = ({ product, onClose }) => {
     };
 
     const totalPrice = (product.price * quantity).toFixed(2);
+    const isMax = quantity >= product.stock;
 
     return (
         <div style={styles.overlay}>
@@ -22,7 +23,7 @@ const QuantityModal = ({ product, onClose }) => {
                 <h2 style={styles.name}>{product.name}</h2>
                 <p style={styles.description}>{product.description}</p>
 
-                <p style={styles.unitPrice}>Preço unitário: R$ {product.price.toFixed(2)}</p>
+                <p style={styles.stock}>{product.stock} disponíveis</p>
 
                 <div style={styles.quantityRow}>
                     <button
@@ -33,8 +34,13 @@ const QuantityModal = ({ product, onClose }) => {
                     </button>
                     <div style={styles.qtyValue}>{quantity}</div>
                     <button
-                        style={styles.qtyBtn}
-                        onClick={() => setQuantity(quantity + 1)}
+                        style={{
+                            ...styles.qtyBtn,
+                            opacity: isMax ? 0.5 : 1,
+                            cursor: isMax ? "not-allowed" : "pointer",
+                        }}
+                        onClick={() => !isMax && setQuantity(quantity + 1)}
+                        disabled={isMax}
                     >
                         +
                     </button>
@@ -73,13 +79,6 @@ const styles = {
         textAlign: "center",
         width: "90%",
     },
-    image: {
-        borderRadius: "16px",
-        height: "160px",
-        margin: "0 auto 1rem",
-        objectFit: "cover",
-        width: "160px",
-    },
     name: {
         fontSize: "1.4rem",
         fontWeight: "600",
@@ -90,7 +89,7 @@ const styles = {
         fontSize: "0.95rem",
         marginBottom: "0.8rem",
     },
-    unitPrice: {
+    stock: {
         color: "#4caf50",
         fontWeight: "bold",
         fontSize: "0.95rem",
@@ -108,7 +107,6 @@ const styles = {
         border: "none",
         borderRadius: "8px",
         color: "#333",
-        cursor: "pointer",
         fontSize: "1.2rem",
         height: "38px",
         padding: "0 1rem",
@@ -123,6 +121,7 @@ const styles = {
     total: {
         fontSize: "1.1rem",
         fontWeight: "bold",
+        color: "#4caf50",
         marginBottom: "1.2rem",
     },
     actions: {
