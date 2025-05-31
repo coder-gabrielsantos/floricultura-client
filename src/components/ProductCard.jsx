@@ -3,7 +3,6 @@ import { useState } from "react";
 const ProductCard = ({ product, onAddToCart }) => {
     const [hovered, setHovered] = useState(false);
 
-    // Determina a imagem principal
     const mainImage =
         Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
@@ -113,6 +112,7 @@ const styles = {
         marginTop: "auto"
     },
     price: {
+        fontFamily: "Nunito, serif",
         color: "#333",
         fontWeight: "bold"
     },
