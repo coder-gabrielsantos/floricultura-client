@@ -27,7 +27,9 @@ const QuantityModal = ({ product, onClose }) => {
 
                 <div style={styles.quantityRow}>
                     <button
-                        style={styles.qtyBtn}
+                        style={{
+                            ...styles.qtyBtn,
+                        }}
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     >
                         –
@@ -37,7 +39,6 @@ const QuantityModal = ({ product, onClose }) => {
                         style={{
                             ...styles.qtyBtn,
                             opacity: isMax ? 0.5 : 1,
-                            cursor: isMax ? "not-allowed" : "pointer",
                         }}
                         onClick={() => !isMax && setQuantity(quantity + 1)}
                         disabled={isMax}
@@ -107,6 +108,7 @@ const styles = {
         border: "none",
         borderRadius: "8px",
         color: "#333",
+        cursor: "pointer",
         fontSize: "1.2rem",
         height: "38px",
         padding: "0 1rem",
