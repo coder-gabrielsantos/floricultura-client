@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAllProducts } from "../../api/_index";
+import BannerHeader from "../../components/BannerHeader";
 import ProductCard from "../../components/ProductCard";
 import styles from "./Home.module.css";
 import Loader from "../../components/Loader";
@@ -56,21 +57,24 @@ const Home = () => {
     if (loading) return <Loader />;
 
     return (
-        <div className={styles.container}>
-            {products.length === 0 ? (
-                <p className={styles.empty}>Nenhum produto encontrado.</p>
-            ) : (
-                <div className={styles.grid}>
-                    {products.map((product) => (
-                        <ProductCard
-                            key={product._id}
-                            product={product}
-                            onAddToCart={() => {}}
-                        />
-                    ))}
-                </div>
-            )}
-        </div>
+        <>
+            <BannerHeader />
+            <div className={styles.container}>
+                {products.length === 0 ? (
+                    <p className={styles.empty}>Nenhum produto encontrado.</p>
+                ) : (
+                    <div className={styles.grid}>
+                        {products.map((product) => (
+                            <ProductCard
+                                key={product._id}
+                                product={product}
+                                onAddToCart={() => {}}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

@@ -14,7 +14,7 @@ const Navbar = ({ onLoginClick, onCartClick }) => {
     return (
         <div style={styles.navWrapper}>
             <nav style={styles.navbar}>
-                <h1 onClick={() => navigate("/")} style={styles.logo}>Floricultura</h1>
+                <h1 onClick={() => navigate("/")} style={styles.logo}>Santa Teresinha</h1>
 
                 <div style={styles.userActions}>
                     {user && user.role === "admin" ? (
