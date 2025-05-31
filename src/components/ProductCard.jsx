@@ -1,19 +1,9 @@
 import { useState } from "react";
-import { addToCart } from "../api/_index.js";
+import QuantityModal from "./QuantityModal.jsx";
 
 const ProductCard = ({ product }) => {
     const [hovered, setHovered] = useState(false);
-
-    const handleAdd = async () => {
-        const token = JSON.parse(localStorage.getItem("user"))?.token;
-        if (!token) return alert("Faça login para adicionar ao carrinho");
-        try {
-            await addToCart(product._id, 1, token);
-            alert("Produto adicionado!");
-        } catch (err) {
-            console.error("Erro ao adicionar ao carrinho:", err);
-        }
-    };
+    const [showModal, setShowModal] = useState(false);
 
     const mainImage =
         Array.isArray(product.images) && product.images.length > 0
@@ -49,11 +39,14 @@ const ProductCard = ({ product }) => {
                 <p style={styles.description}>{product.description}</p>
                 <div style={styles.footer}>
                     <span style={styles.price}>R$ {product.price.toFixed(2)}</span>
-                    <button onClick={handleAdd} style={styles.button}>
+                    <button onClick={() => setShowModal(true)} style={styles.button}>
                         Adicionar
                     </button>
                 </div>
             </div>
+            {showModal && (
+                <QuantityModal product={product} onClose={() => setShowModal(false)} />
+            )}
         </div>
     );
 };
