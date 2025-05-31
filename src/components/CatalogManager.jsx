@@ -59,6 +59,32 @@ const CatalogManager = () => {
         }
     };
 
+    const handleCoverChange = (e, id) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            const base64 = reader.result.split(",")[1];
+            const updatedCatalogs = catalogs.map((c) =>
+                c._id === id
+                    ? { ...c, coverImage: { base64, contentType: file.type } }
+                    : c
+            );
+            setCatalogs(updatedCatalogs);
+
+            // ✅ Salva diretamente no backend
+            try {
+                await updateCatalog(id, {
+                    coverImage: { base64, contentType: file.type },
+                }, token);
+            } catch (err) {
+                console.error("Erro ao salvar capa do catálogo:", err);
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
         <div style={styles.section}>
             <h3 style={styles.heading}>Catálogos</h3>
@@ -84,6 +110,30 @@ const CatalogManager = () => {
             <div style={styles.tagList}>
                 {catalogs.map((cat) => (
                     <div key={cat._id} style={styles.tag}>
+                        <div
+                            style={styles.cover}
+                            onClick={() =>
+                                document.getElementById(`coverInput-${cat._id}`).click()
+                            }
+                        >
+                            {cat.coverImage?.base64 ? (
+                                <img
+                                    src={`data:${cat.coverImage.contentType};base64,${cat.coverImage.base64}`}
+                                    alt="Capa"
+                                    style={styles.coverImage}
+                                />
+                            ) : (
+                                <span style={styles.noCover}>Sem capa</span>
+                            )}
+                            <input
+                                id={`coverInput-${cat._id}`}
+                                type="file"
+                                accept="image/*"
+                                style={{ display: "none" }}
+                                onChange={(e) => handleCoverChange(e, cat._id)}
+                            />
+                        </div>
+
                         {editingId === cat._id ? (
                             <>
                                 <input
@@ -112,7 +162,7 @@ const CatalogManager = () => {
                                     onClick={() => removeCatalog(cat._id)}
                                     style={styles.tagRemove}
                                 >
-                                    <Xmark style={styles.icon}/>
+                                    <Xmark style={styles.icon} />
                                 </button>
                             </>
                         )}
@@ -133,10 +183,30 @@ const styles = {
         fontWeight: "500",
         padding: "0.6rem 1rem",
     },
+    cover: {
+        alignItems: "center",
+        backgroundColor: "#ddd",
+        borderBottomLeftRadius: "6px",   // arredonda só lado esquerdo
+        borderTopLeftRadius: "6px",
+        cursor: "pointer",
+        display: "flex",
+        height: "48px",
+        justifyContent: "center",
+        overflow: "hidden",
+        width: "48px",
+    },
+    coverImage: {
+        height: "100%",
+        objectFit: "cover",
+        width: "100%",
+    },
     heading: {
         color: "#4caf50",
         fontSize: "1.2rem",
         marginBottom: "1rem",
+    },
+    icon: {
+        fontSize: ".8rem"
     },
     input: {
         borderRadius: "8px",
@@ -150,6 +220,10 @@ const styles = {
         gap: "1rem",
         marginBottom: "1rem",
     },
+    noCover: {
+        color: "#666",
+        fontSize: "0.55rem",
+    },
     section: {
         borderTop: "1px solid rgba(0, 0, 0, 0.16)",
         marginBottom: "2rem",
@@ -162,10 +236,10 @@ const styles = {
         display: "flex",
         fontSize: "0.95rem",
         gap: "0.5rem",
-        height: "32px",
-        minHeight: "32px",
-        paddingLeft: "0.75rem",
-        paddingRight: "0.5rem",
+        height: "48px",                   // altura maior
+        margin: 0,
+        paddingLeft: 0,                   // para alinhar com a capa
+        paddingRight: "0.75rem",
     },
     tagEditInput: {
         background: "transparent",
@@ -217,9 +291,6 @@ const styles = {
         lineHeight: "1",
         padding: "0.2rem 0.6rem",
     },
-    icon: {
-        fontSize: ".8rem"
-    }
 };
 
 export default CatalogManager;

@@ -41,6 +41,12 @@ const CatalogsPage = () => {
     const getImage = (catalog) => {
         if (catalog._id === "all") return catalog.image;
 
+        // ✅ usa a capa, se houver
+        if (catalog.coverImage?.base64 && catalog.coverImage?.contentType) {
+            return `data:${catalog.coverImage.contentType};base64,${catalog.coverImage.base64}`;
+        }
+
+        // ⛔ fallback: imagem do primeiro produto
         const firstProduct = catalog.products?.[0];
         if (!firstProduct?.images?.[0]?.data?.data) return null;
 
