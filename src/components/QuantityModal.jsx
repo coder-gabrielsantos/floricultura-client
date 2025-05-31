@@ -14,30 +14,11 @@ const QuantityModal = ({ product, onClose }) => {
         }
     };
 
-    const getImageSrc = () => {
-        const img = product.images?.[0];
-        if (typeof img?.data === "string" && img.data.startsWith("data:image")) {
-            return img.data;
-        }
-        if (typeof img?.data?.data === "string" && img.data.data.startsWith("data:image")) {
-            return img.data.data;
-        }
-        return null;
-    };
-
     const totalPrice = (product.price * quantity).toFixed(2);
 
     return (
         <div style={styles.overlay}>
             <div style={styles.modal}>
-                {getImageSrc() && (
-                    <img
-                        src={getImageSrc()}
-                        alt={product.name}
-                        style={styles.image}
-                    />
-                )}
-
                 <h2 style={styles.name}>{product.name}</h2>
                 <p style={styles.description}>{product.description}</p>
 
