@@ -17,3 +17,11 @@ export const addToCart = async (productId, quantity, token) => {
     );
     return response.data;
 };
+
+// Remove item from cart
+export const removeFromCart = async (productId, token) => {
+    const response = await API.delete(`/cart/remove/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+};

@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuantityModal from "./QuantityModal.jsx";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, cart, setCart }) => {
     const [hovered, setHovered] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [alreadyInCart, setAlreadyInCart] = useState(false);
 
     const mainImage =
         Array.isArray(product.images) && product.images.length > 0
             ? product.images[0]
             : null;
+
+    useEffect(() => {
+        if (!cart) return;
+        const found = cart.items?.some(
+            (item) => item.product._id === product._id
+        );
+        setAlreadyInCart(found);
+    }, [cart, product._id]);
 
     return (
         <div
@@ -39,13 +48,25 @@ const ProductCard = ({ product }) => {
                 <p style={styles.description}>{product.description}</p>
                 <div style={styles.footer}>
                     <span style={styles.price}>R$ {product.price.toFixed(2)}</span>
-                    <button onClick={() => setShowModal(true)} style={styles.button}>
-                        Adicionar
-                    </button>
+                    {alreadyInCart ? (
+                        <div style={styles.inCart}>No carrinho</div>
+                    ) : (
+                        <button
+                            onClick={() => setShowModal(true)}
+                            style={styles.button}
+                        >
+                            Adicionar
+                        </button>
+                    )}
                 </div>
             </div>
+
             {showModal && (
-                <QuantityModal product={product} onClose={() => setShowModal(false)} />
+                <QuantityModal
+                    product={product}
+                    onClose={() => setShowModal(false)}
+                    setCart={setCart}
+                />
             )}
         </div>
     );
@@ -128,6 +149,14 @@ const styles = {
         color: "white",
         cursor: "pointer",
         fontSize: "0.9rem",
+        padding: "0.5rem 0.8rem"
+    },
+    inCart: {
+        backgroundColor: "#ddd",
+        borderRadius: "5px",
+        color: "#444",
+        fontSize: "0.85rem",
+        fontWeight: "bold",
         padding: "0.5rem 0.8rem"
     }
 };

@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import { Trash, XmarkSquare } from "iconoir-react";
-import { getCart } from "../api/_index.js";
+import { getCart, removeFromCart } from "../api/_index.js";
 
 const CartModal = ({ onClose }) => {
     const [cart, setCart] = useState(null);
     const [closing, setClosing] = useState(false);
+
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+
+    const removeItem = async (productId) => {
+        try {
+            await removeFromCart(productId, token);
+            const updatedCart = await getCart(token);
+            setCart(updatedCart);
+        } catch (err) {
+            console.error("Erro ao remover item:", err);
+        }
+    };
 
     const handleClose = () => {
         setClosing(true);

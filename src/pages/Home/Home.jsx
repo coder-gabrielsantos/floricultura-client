@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getAllProducts } from "../../api/_index";
+import { getAllProducts, getCart } from "../../api/_index";
 import BannerHeader from "../../components/BannerHeader";
 import ProductCard from "../../components/ProductCard";
 import styles from "./Home.module.css";
@@ -19,6 +19,7 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
+    const [cart, setCart] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +55,12 @@ const Home = () => {
         fetchData();
     }, [searchParams]);
 
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        if (!token) return;
+        getCart(token).then(setCart);
+    }, []);
+
     if (loading) return <Loader />;
 
     return (
@@ -68,6 +75,8 @@ const Home = () => {
                             <ProductCard
                                 key={product._id}
                                 product={product}
+                                cart={cart}
+                                setCart={setCart}
                             />
                         ))}
                     </div>

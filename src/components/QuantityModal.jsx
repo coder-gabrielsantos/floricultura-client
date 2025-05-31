@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { addToCart } from "../api/cart";
+import { addToCart, getCart } from "../api/cart";
 
-const QuantityModal = ({ product, onClose }) => {
+const QuantityModal = ({ product, onClose, setCart }) => {
     const [quantity, setQuantity] = useState(1);
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
     const handleConfirm = async () => {
         try {
             await addToCart(product._id, quantity, token);
+            const updatedCart = await getCart(token);
+            setCart(updatedCart);
             onClose();
         } catch (err) {
             console.error("Erro ao adicionar ao carrinho:", err);
@@ -27,9 +29,7 @@ const QuantityModal = ({ product, onClose }) => {
 
                 <div style={styles.quantityRow}>
                     <button
-                        style={{
-                            ...styles.qtyBtn,
-                        }}
+                        style={styles.qtyBtn}
                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     >
                         –
@@ -39,6 +39,7 @@ const QuantityModal = ({ product, onClose }) => {
                         style={{
                             ...styles.qtyBtn,
                             opacity: isMax ? 0.5 : 1,
+                            cursor: isMax ? "not-allowed" : "pointer",
                         }}
                         onClick={() => !isMax && setQuantity(quantity + 1)}
                         disabled={isMax}
@@ -108,7 +109,6 @@ const styles = {
         border: "none",
         borderRadius: "8px",
         color: "#333",
-        cursor: "pointer",
         fontSize: "1.2rem",
         height: "38px",
         padding: "0 1rem",
