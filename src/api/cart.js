@@ -7,3 +7,13 @@ export const getCart = async (token) => {
     });
     return response.data;
 };
+
+// Add items to cart
+export const addToCart = async (productId, quantity, token) => {
+    const response = await API.post(
+        "/cart/add",
+        { productId, quantity },
+        { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return response.data;
+};

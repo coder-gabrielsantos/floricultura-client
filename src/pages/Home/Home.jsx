@@ -68,7 +68,6 @@ const Home = () => {
                             <ProductCard
                                 key={product._id}
                                 product={product}
-                                onAddToCart={() => {}}
                             />
                         ))}
                     </div>

@@ -2,19 +2,6 @@ import { useEffect, useState } from "react";
 import { Trash, XmarkSquare } from "iconoir-react";
 import { getCart } from "../api/_index.js";
 
-const mockCart = {
-    items: [
-        {
-            product: { _id: "1", name: "Buquê Rosas Vermelhas", price: 79.9 },
-            quantity: 1
-        },
-        {
-            product: { _id: "2", name: "Orquídea Branca", price: 64.5 },
-            quantity: 2
-        }
-    ]
-};
-
 const CartModal = ({ onClose }) => {
     const [cart, setCart] = useState(null);
     const [closing, setClosing] = useState(false);
@@ -54,8 +41,11 @@ const CartModal = ({ onClose }) => {
     }, []);
 
     useEffect(() => {
-        setCart(mockCart);
-        // getCart(token).then(setCart).catch(console.error);
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        if (!token) return;
+        getCart(token)
+            .then(setCart)
+            .catch((err) => console.error("Erro ao buscar carrinho:", err));
     }, []);
 
     const total = cart?.items?.reduce(

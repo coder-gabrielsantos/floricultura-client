@@ -1,7 +1,19 @@
 import { useState } from "react";
+import { addToCart } from "../api/_index.js";
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product }) => {
     const [hovered, setHovered] = useState(false);
+
+    const handleAdd = async () => {
+        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        if (!token) return alert("Faça login para adicionar ao carrinho");
+        try {
+            await addToCart(product._id, 1, token);
+            alert("Produto adicionado!");
+        } catch (err) {
+            console.error("Erro ao adicionar ao carrinho:", err);
+        }
+    };
 
     const mainImage =
         Array.isArray(product.images) && product.images.length > 0
@@ -37,7 +49,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                 <p style={styles.description}>{product.description}</p>
                 <div style={styles.footer}>
                     <span style={styles.price}>R$ {product.price.toFixed(2)}</span>
-                    <button onClick={() => onAddToCart(product)} style={styles.button}>
+                    <button onClick={handleAdd} style={styles.button}>
                         Adicionar
                     </button>
                 </div>
