@@ -9,6 +9,7 @@ import UserProfile from "./pages/User/UserProfile.jsx";
 import UserAddress from "./pages/User/UserAddress.jsx";
 import AdminPanel from "./pages/Admin/AdminPanel.jsx";
 import NewProduct from "./pages/Admin/NewProduct.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
 
 function App() {
     const [showLogin, setShowLogin] = useState(false);
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/painel" element={<AdminPanel />} />
                 <Route path="/novo-produto" element={<NewProduct />} />
                 <Route path="/editar-produto/:id" element={<NewProduct />} />
+                <Route path="/checkout" element={<Checkout />} />
             </Routes>
         </Router>
     );

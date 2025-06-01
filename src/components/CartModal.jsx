@@ -120,7 +120,9 @@ const CartModal = ({ onClose }) => {
                         <span>Total</span>
                         <strong>R$ {total?.toFixed(2) || "0,00"}</strong>
                     </div>
-                    <button style={styles.button}>Finalizar Pedido</button>
+                    <button onClick={() => navigate("/checkout")} style={styles.button}>
+                        Finalizar Pedido
+                    </button>
                 </div>
             </div>
         </div>
