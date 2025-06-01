@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Trash, XmarkSquare } from "iconoir-react";
 import { getCart, removeFromCart } from "../api/_index.js";
 
 const CartModal = ({ onClose }) => {
+    const navigate = useNavigate();
+
     const [cart, setCart] = useState(null);
     const [closing, setClosing] = useState(false);
 
@@ -13,6 +16,7 @@ const CartModal = ({ onClose }) => {
             await removeFromCart(productId, token);
             const updatedCart = await getCart(token);
             setCart(updatedCart);
+            navigate(0);
         } catch (err) {
             console.error("Erro ao remover item:", err);
         }
