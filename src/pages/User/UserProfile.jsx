@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getAllOrders } from "../../api/_index.js";
+import { getUserData, deleteAddress, getOrders } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -13,8 +13,13 @@ const UserProfile = () => {
 
     const [profile, setProfile] = useState(null);
     const [orders, setOrders] = useState([]);
+    const [expandedOrderId, setExpandedOrderId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [confirming, setConfirming] = useState(null);
+
+    const toggleOrder = (id) => {
+        setExpandedOrderId(expandedOrderId === id ? null : id);
+    };
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -22,12 +27,8 @@ const UserProfile = () => {
         getUserData()
             .then(async (data) => {
                 setProfile(data);
-                if (data.role === "admin") {
-                    const pedidos = await getAllOrders(token);
-                    setOrders(pedidos);
-                } else {
-                    setOrders(data.orders || []);
-                }
+                const pedidos = await getOrders(token);
+                setOrders(pedidos);
                 setLoading(false);
             })
             .catch((err) => {
@@ -114,33 +115,77 @@ const UserProfile = () => {
 
             {profile.role !== "admin" && (
                 <div className={styles.section}>
-                    <h3>Meus Pedidos</h3>
-                    {orders.length > 0 ? (
-                        orders.map((order) => (
-                            <div key={order._id} className={styles.order}>
-                                <div className={styles.orderHeader}>
-                                    <span className={styles.orderNumber}>Pedido #{order._id}</span>
-                                    <span className={styles.date}>{order.date}</span>
-                                </div>
-                                <ul className={styles.productList}>
-                                    {order.products.map((item, i) => (
-                                        <li key={i} className={styles.productItem}>
-                                            {item.product.name} x{item.quantity}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div className={styles.orderInfo}>
-                                    <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
-                                    <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
-                                    {order.status}
-                                </span>
-                                </div>
-                            </div>
-                        ))
+                    <h3 className={styles.subtitle}>Meus Pedidos</h3>
+
+                    {orders.length === 0 ? (
+                        <p className={styles.noData}>Nenhum pedido encontrado.</p>
                     ) : (
-                        <p style={{ color: "#777", marginTop: "1rem" }}>
-                            Nenhum pedido encontrado.
-                        </p>
+                        <div className={styles.ordersList}>
+                            {orders.map((order) => (
+                                <div
+                                    key={order._id}
+                                    className={styles.orderCard}
+                                    onClick={() =>
+                                        setExpandedOrderId(expandedOrderId === order._id ? null : order._id)
+                                    }
+                                >
+                                    <header className={styles.orderHeader}>
+                                        <h4>
+                                            Pedido para o dia {new Date(order.date).toLocaleDateString()} -{" "}
+                                            {order.timeBlock}
+                                        </h4>
+                                        <span className={styles.status}>{order.status}</span>
+                                    </header>
+
+                                    <ul className={styles.productList}>
+                                        {order.products.map((item, i) => (
+                                            <li key={i}>
+                                                {item.product?.name || "Produto"} x{item.quantity}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <span className={styles.total}>
+                                        Total: R${" "}
+                                        {order.products
+                                            .reduce(
+                                                (sum, item) =>
+                                                    sum + (item.product?.price || 0) * item.quantity,
+                                                0
+                                            )
+                                            .toFixed(2)}
+                                     </span>
+
+                                    {expandedOrderId === order._id ? (
+                                        <div className={styles.orderDetails}>
+                                            <div className={styles.detailRow}>
+                                                <strong>Destinatário:</strong> {order.receiverName}
+                                            </div>
+
+                                            {order.address && (
+                                                <div className={styles.detailRow}>
+                                                    <strong>Endereço:</strong><br />
+                                                    {order.address.street}, {order.address.number} – {order.address.neighborhood}
+                                                    {order.address.complement && `, ${order.address.complement}`}
+                                                    {order.address.reference && (
+                                                        <>
+                                                            <br />
+                                                            <em>{order.address.reference}</em>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            <div className={styles.detailRow}>
+                                                <strong>Forma de pagamento:</strong> {order.paymentMethod}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className={styles.clickHint}>Clique para ver mais detalhes</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </div>
             )}
