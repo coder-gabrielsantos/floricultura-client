@@ -1,0 +1,214 @@
+.addAddress {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+}
+
+.addressCard {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.addressCard:hover {
+    border-color: #4caf50;
+}
+
+.addressIndex {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.addressTop {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.charCount {
+    color: #666;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+    text-align: right;
+}
+
+.confirmBtn {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 2rem auto 0;
+    padding: 0.8rem 8rem;
+}
+
+.container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.custom-select__control {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: none;
+    font-size: 1rem;
+    height: 40px !important;
+    min-height: 40px !important;
+}
+
+.custom-select__indicator {
+    align-items: center;
+    display: flex;
+    height: 40px;
+    padding: 0 8px;
+}
+
+.custom-select__menu {
+    z-index: 10;
+}
+
+.custom-select__single-value {
+    color: #333;
+    line-height: 1;
+    margin: 0;
+}
+
+.custom-select__value-container {
+    align-items: center;
+    display: flex;
+    height: 40px;
+    padding: 0 0.75rem;
+}
+
+.datetimeRow {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.input {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    height: 40px;
+    line-height: 1;
+    padding: 0.5rem 1rem;
+    width: 100%;
+}
+
+.paymentGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.paymentOption {
+    background-color: #f7f7f7;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    flex: 1;
+    font-weight: 500;
+    min-width: 100px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.paymentOption:hover {
+    border-color: #4caf50;
+}
+
+.paymentOption.selected {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.product {
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.section {
+    border-top: 1px solid rgba(0, 0, 0, 0.16);
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+}
+
+.section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.section h3 {
+    color: #4caf50;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.selected {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+}
+
+.selectContainer {
+    flex: 1;
+}
+
+.textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    height: 80px;
+    margin-top: 0.5rem;
+    overflow-y: auto;
+    padding: 0.6rem 1rem;
+    resize: none;
+    width: 100%;
+}
+
+.title {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.total {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    text-align: right;
+}
+
+.dateWrapper {
+    flex: 1;
+}
