@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { getUserData, getCart, getAvailableBlocks } from "../../api/_index";
+import { getUserData, getCart, getAvailableBlocks, createOrder } from "../../api/_index";
 import Loader from "../../components/Loader";
 import styles from "./Checkout.module.css";
 
 const Checkout = () => {
     const navigate = useNavigate();
+
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+
     const [loading, setLoading] = useState(true);
     const [cart, setCart] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -40,29 +43,35 @@ const Checkout = () => {
         try {
             const blocks = await getAvailableBlocks(selectedDate);
             setAvailableBlocks(blocks);
+            setTimeBlock(""); // limpar o horário anterior
         } catch (err) {
             console.error("Erro ao buscar blocos disponíveis:", err);
             setAvailableBlocks([]);
         }
     };
 
-    const handleConfirm = () => {
-        const order = {
-            receiverName,
-            cardMessage,
-            date,
-            timeBlock,
-            deliveryType,
-            paymentMethod: selectedPayment,
-            address: deliveryType === "entrega" ? selectedAddress : null,
-            products: cart.items.map((item) => ({
-                product: item.product._id,
-                quantity: item.quantity
-            }))
-        };
+    const handleConfirm = async () => {
+        try {
+            const orderData = {
+                receiverName,
+                cardMessage,
+                date,
+                timeBlock,
+                deliveryType,
+                paymentMethod: selectedPayment,
+                address: deliveryType === "retirada" ? null : selectedAddress,
+                products: cart.items.map(item => ({
+                    product: item.product._id,
+                    quantity: item.quantity
+                }))
+            };
 
-        console.log("Enviando pedido:", order);
-        // Aqui vai o POST para criar o pedido
+            await createOrder(orderData, token);
+            navigate("/perfil");
+        } catch (err) {
+            console.error("Erro ao criar pedido:", err);
+            alert("Erro ao finalizar pedido.");
+        }
     };
 
     useEffect(() => {
@@ -192,18 +201,7 @@ const Checkout = () => {
                             type="date"
                             className={styles.input}
                             value={date}
-                            onChange={async (e) => {
-                                const selectedDate = e.target.value;
-                                setDate(selectedDate);
-                                try {
-                                    const blocks = await getAvailableBlocks(selectedDate);
-                                    setAvailableBlocks(blocks);
-                                    setTimeBlock(""); // limpar seleção anterior
-                                } catch (err) {
-                                    console.error("Erro ao buscar blocos disponíveis:", err);
-                                    setAvailableBlocks([]);
-                                }
-                            }}
+                            onChange={handleDateChange}
                         />
                     </div>
 
