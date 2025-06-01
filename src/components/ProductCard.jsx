@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import QuantityModal from "./QuantityModal.jsx";
 
 const ProductCard = ({ product, cart, setCart }) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isAdmin = user?.role === "admin";
+
     const [hovered, setHovered] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [alreadyInCart, setAlreadyInCart] = useState(false);
@@ -53,7 +56,12 @@ const ProductCard = ({ product, cart, setCart }) => {
                     ) : (
                         <button
                             onClick={() => setShowModal(true)}
-                            style={styles.button}
+                            style={{
+                                ...styles.button,
+                                backgroundColor: isAdmin ? "#ccc" : "#4CAF50",
+                                cursor: isAdmin ? "" : "pointer",
+                            }}
+                            disabled={isAdmin}
                         >
                             Adicionar
                         </button>
