@@ -11,8 +11,8 @@ const BannerHeader = () => {
                     <img src={logoImage} alt="Logo" className={styles.logo} />
                 </div>
                 <div className={styles.textArea}>
-                    <h1 className={styles.title}>Floricultura Santa Teresinha</h1>
-                    <p className={styles.subtitle}>Loja Virtual em Coelho Neto / MA</p>
+                    <h1 className={styles.title}>Loja Virtual Oficial</h1>
+                    <p className={styles.subtitle}>Coelho Neto / MA</p>
                 </div>
             </div>
         </div>
