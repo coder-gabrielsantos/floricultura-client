@@ -44,7 +44,8 @@ const UserProfile = () => {
             <div className={styles.titleRow}>
                 <h2 className={styles.title}>
                     Minha Conta {profile.role === "admin" &&
-                    <span style={{ fontWeight: 400 }}>(Adm)</span>}
+                    <span style={{ fontWeight: 400, fontStyle: "italic" }}> - adm</span>
+                }
                 </h2>
                 <button
                     className={styles.logoutButton}
