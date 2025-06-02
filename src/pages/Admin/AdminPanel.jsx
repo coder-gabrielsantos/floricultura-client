@@ -38,7 +38,7 @@ const AdminPanel = () => {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
         Promise.all([
             getAllProducts(null, token),
-            getAllOrders(token)
+            getOrders(token)
         ])
             .then(([prodList, orderList]) => {
                 setProducts(prodList);
