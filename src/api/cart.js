@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Get the current user's shopping cart
 export const getCart = async (token) => {

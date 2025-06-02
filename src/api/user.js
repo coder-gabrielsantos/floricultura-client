@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Log in a user
 export const loginUser = async (credentials) => {

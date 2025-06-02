@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Get all catalogs
 export const getCatalogs = async () => {

@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Get orders (admin or user)
 export const getOrders = async (token) => {

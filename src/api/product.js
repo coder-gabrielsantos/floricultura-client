@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Get all products
 export const getAllProducts = async (catalogId = null, token = null) => {

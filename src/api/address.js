@@ -1,4 +1,4 @@
-import API from "./base";
+import API from "./_baseURL.js";
 
 // Create a new address
 export const createAddress = async (data, token) => {
