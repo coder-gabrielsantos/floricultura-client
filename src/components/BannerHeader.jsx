@@ -12,7 +12,7 @@ const BannerHeader = () => {
                 </div>
                 <div className={styles.textArea}>
                     <h1 className={styles.title}>Floricultura Santa Teresinha</h1>
-                    <p className={styles.subtitle}>Loja Virtual - Coelho Neto / MA</p>
+                    <p className={styles.subtitle}>Loja Virtual em Coelho Neto / MA</p>
                 </div>
             </div>
         </div>
