@@ -1,0 +1,81 @@
+.nav-wrapper {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1440px;
+    padding: 1rem 2rem;
+    width: 100%;
+}
+
+.logo {
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.user-actions {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    font-size: 0.95rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.login {
+    align-items: center;
+    color: #4caf50;
+    cursor: pointer;
+    display: flex;
+    font-size: 0.95rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.icon {
+    font-size: 1rem;
+}
+
+/* MEDIA QUERY */
+@media (max-width: 600px) {
+    .action-btn span,
+    .login span,
+    .action-label {
+        display: none;
+    }
+
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+
+    .action-btn,
+    .login {
+        padding: 0.3rem 0.5rem;
+    }
+}
