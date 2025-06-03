@@ -98,10 +98,11 @@
 .editBtn,
 .deleteBtn {
     border: none;
-    padding: 0.4rem 0.75rem;
     border-radius: 8px;
-    font-size: 0.9rem;
     cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.75rem;
+    width: 80px;
 }
 
 .editBtn {
