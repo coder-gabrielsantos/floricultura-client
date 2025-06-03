@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import { LogOut } from "iconoir-react";
 import styles from "./UserProfile.module.css";
 
+const ORDERS_PER_PAGE = 2;
 const UserProfile = () => {
     const navigate = useNavigate();
     const { logout } = useAuth();
@@ -17,6 +18,12 @@ const UserProfile = () => {
     const [expandedOrderId, setExpandedOrderId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [confirming, setConfirming] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const paginatedOrders = orders.slice(
+        (currentPage - 1) * ORDERS_PER_PAGE,
+        currentPage * ORDERS_PER_PAGE
+    );
 
     const [editData, setEditData] = useState({
         name: "",
@@ -60,7 +67,7 @@ const UserProfile = () => {
             });
     }, []);
 
-    if (loading) return <Loader />;
+    if (loading) return <Loader/>;
 
     return (
         <div className={styles.container}>
@@ -77,7 +84,7 @@ const UserProfile = () => {
                         window.location.reload();
                     }}
                 >
-                    <LogOut style={{ marginRight: "0.5rem" }} />
+                    <LogOut style={{ marginRight: "0.5rem" }}/>
                     Sair da conta
                 </button>
             </div>
@@ -147,7 +154,7 @@ const UserProfile = () => {
                         <p className={styles.noData}>Nenhum pedido encontrado.</p>
                     ) : (
                         <div className={styles.ordersList}>
-                            {orders.map((order) => (
+                            {paginatedOrders.map((order) => (
                                 <div
                                     key={order._id}
                                     className={styles.orderCard}
@@ -180,34 +187,66 @@ const UserProfile = () => {
                                     </span>
 
                                     {expandedOrderId === order._id ? (
-                                        <div className={styles.orderDetails}>
-                                            <div className={styles.detailRow}>
-                                                <strong>Destinatário:</strong> {order.receiverName}
-                                            </div>
-
-                                            {order.address && (
+                                        <>
+                                            <div className={styles.orderDetails}>
                                                 <div className={styles.detailRow}>
-                                                    <strong>Endereço:</strong><br />
-                                                    {order.address.street}, {order.address.number} – {order.address.neighborhood}
-                                                    {order.address.complement && `, ${order.address.complement}`}
-                                                    {order.address.reference && (
-                                                        <>
-                                                            <br />
-                                                            <em>{order.address.reference}</em>
-                                                        </>
-                                                    )}
+                                                    <strong>Destinatário:</strong> {order.receiverName}
                                                 </div>
-                                            )}
+
+                                                {order.address && (
+                                                    <div className={styles.detailRow}>
+                                                        <strong>Endereço:</strong><br/>
+                                                        {order.address.street}, {order.address.number} – {order.address.neighborhood}
+                                                        {order.address.complement && `, ${order.address.complement}`}
+                                                        {order.address.reference && (
+                                                            <>
+                                                                <br/>
+                                                                <em>{order.address.reference}</em>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                <div className={styles.detailRow}>
+                                                    <strong>Forma de pagamento:</strong> {order.paymentMethod}
+                                                </div>
+                                            </div>
 
                                             <div className={styles.detailRow}>
-                                                <strong>Forma de pagamento:</strong> {order.paymentMethod}
+                                                <button
+                                                    className={styles.modalBtn}
+                                                    onClick={() => console.log("Pagar pedido:", order._id)}
+                                                >
+                                                    Realizar Pagamento
+                                                </button>
                                             </div>
-                                        </div>
+                                        </>
                                     ) : (
                                         <p className={styles.clickHint}>Clique para ver mais detalhes</p>
                                     )}
                                 </div>
                             ))}
+
+                            <div className={styles.pagination}>
+                                <button
+                                    onClick={() => setCurrentPage(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className={styles.pageBtn}
+                                >
+                                    Anterior
+                                </button>
+
+                                <span>Página {currentPage}</span>
+
+                                <button
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                    disabled={currentPage >= Math.ceil(orders.length / ORDERS_PER_PAGE)}
+                                    className={styles.pageBtn}
+                                >
+                                    Próximo
+                                </button>
+                            </div>
+
                         </div>
                     )}
                 </div>
