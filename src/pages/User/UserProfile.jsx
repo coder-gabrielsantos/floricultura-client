@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getOrders } from "../../api/_index.js";
+import { getUserData, deleteAddress, getOrders, updateProfile } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -11,14 +11,29 @@ const UserProfile = () => {
     const navigate = useNavigate();
     const { logout } = useAuth();
 
+    const [showEditModal, setShowEditModal] = useState(false);
     const [profile, setProfile] = useState(null);
     const [orders, setOrders] = useState([]);
     const [expandedOrderId, setExpandedOrderId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [confirming, setConfirming] = useState(null);
 
-    const toggleOrder = (id) => {
-        setExpandedOrderId(expandedOrderId === id ? null : id);
+    const [editData, setEditData] = useState({
+        name: "",
+        phone: "",
+        currentPassword: "",
+        newPassword: ""
+    });
+
+    const handleUpdateProfile = async () => {
+        try {
+            await updateProfile(editData);
+            const updated = await getUserData();
+            setProfile(updated);
+            setShowEditModal(false);
+        } catch (err) {
+            alert(err.response?.data?.message || "Erro ao atualizar");
+        }
     };
 
     useEffect(() => {
@@ -27,6 +42,14 @@ const UserProfile = () => {
         getUserData()
             .then(async (data) => {
                 setProfile(data);
+
+                setEditData({
+                    name: data.name || "",
+                    phone: data.phone || "",
+                    currentPassword: "",
+                    newPassword: ""
+                });
+
                 const pedidos = await getOrders(token);
                 setOrders(pedidos);
                 setLoading(false);
@@ -44,8 +67,7 @@ const UserProfile = () => {
             <div className={styles.titleRow}>
                 <h2 className={styles.title}>
                     Minha Conta {profile.role === "admin" &&
-                    <span style={{ fontWeight: 400, fontStyle: "italic" }}> - adm</span>
-                }
+                    <span style={{ fontWeight: 400, fontStyle: "italic" }}> - adm</span>}
                 </h2>
                 <button
                     className={styles.logoutButton}
@@ -55,17 +77,21 @@ const UserProfile = () => {
                         window.location.reload();
                     }}
                 >
-                    <LogOut style={{ marginRight: "0.5rem" }}/>
+                    <LogOut style={{ marginRight: "0.5rem" }} />
                     Sair da conta
                 </button>
             </div>
 
             <div className={styles.section}>
-                <h3>Meus Dados</h3>
+                <div className={styles.titleWithButton}>
+                    <h3 className={styles.subtitle}>Meus Dados</h3>
+                    <button className={styles.editUserBtn} onClick={() => setShowEditModal(true)}>
+                        Editar dados
+                    </button>
+                </div>
+
                 <p><strong>Nome:</strong> {profile.name}</p>
-                <p>
-                    <strong>{profile.email ? "Email:" : "Telefone:"}</strong> {profile.email || profile.phone}
-                </p>
+                <p><strong>WhatsApp:</strong> {profile.phone}</p>
             </div>
 
             {profile.role !== "admin" && (
@@ -93,7 +119,6 @@ const UserProfile = () => {
                                     >
                                         Editar
                                     </button>
-
                                     <button
                                         className={styles.deleteBtn}
                                         onClick={() => setConfirming(addr._id)}
@@ -132,8 +157,7 @@ const UserProfile = () => {
                                 >
                                     <header className={styles.orderHeader}>
                                         <h4>
-                                            {new Date(order.date).toLocaleDateString()} -{" "}
-                                            {order.timeBlock}
+                                            {new Date(order.date).toLocaleDateString()} - {order.timeBlock}
                                         </h4>
                                         <span className={styles.status}>{order.status}</span>
                                     </header>
@@ -147,15 +171,13 @@ const UserProfile = () => {
                                     </ul>
 
                                     <span className={styles.total}>
-                                        Total: R${" "}
-                                        {order.products
-                                            .reduce(
-                                                (sum, item) =>
-                                                    sum + (item.product?.price || 0) * item.quantity,
-                                                0
-                                            )
-                                            .toFixed(2)}
-                                     </span>
+                                        Total: R$ {order.products
+                                        .reduce(
+                                            (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+                                            0
+                                        )
+                                        .toFixed(2)}
+                                    </span>
 
                                     {expandedOrderId === order._id ? (
                                         <div className={styles.orderDetails}>
@@ -207,6 +229,55 @@ const UserProfile = () => {
                         }
                     }}
                 />
+            )}
+
+            {showEditModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalBox}>
+                        <h3 className={styles.modalTitle}>Atualizar Dados</h3>
+
+                        <input
+                            type="text"
+                            placeholder="Nome"
+                            value={editData.name}
+                            onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                            className={styles.modalInput}
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="Telefone"
+                            value={editData.phone}
+                            onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+                            className={styles.modalInput}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Senha atual (obrigatória para trocar)"
+                            value={editData.currentPassword}
+                            onChange={(e) => setEditData({ ...editData, currentPassword: e.target.value })}
+                            className={styles.modalInput}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Nova senha (opcional)"
+                            value={editData.newPassword}
+                            onChange={(e) => setEditData({ ...editData, newPassword: e.target.value })}
+                            className={styles.modalInput}
+                        />
+
+                        <div className={styles.modalActionsColumn}>
+                            <button className={styles.modalBtn} onClick={handleUpdateProfile}>
+                                Salvar
+                            </button>
+                            <button className={styles.cancelBtn} onClick={() => setShowEditModal(false)}>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

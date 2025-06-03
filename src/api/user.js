@@ -25,3 +25,17 @@ export const getUserData = async () => {
     });
     return response.data;
 };
+
+// Update user profile
+export const updateProfile = async (data) => {
+    const response = await API.put("/users/me", data, {
+        headers: {
+            Authorization: `Bearer ${
+                localStorage.getItem("user")
+                    ? JSON.parse(localStorage.getItem("user")).token
+                    : ""
+            }`
+        }
+    });
+    return response.data;
+};

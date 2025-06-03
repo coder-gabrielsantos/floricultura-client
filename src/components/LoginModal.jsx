@@ -85,7 +85,7 @@ const LoginModal = ({ onClose }) => {
                     <input
                         type="text"
                         name="identifier"
-                        placeholder="Email ou Telefone"
+                        placeholder="Whatsapp"
                         value={form.identifier}
                         onChange={handleChange}
                         style={styles.input}

@@ -99,11 +99,17 @@ const NewProduct = () => {
         e.preventDefault();
         const token = JSON.parse(localStorage.getItem("user"))?.token;
 
+        const preparedData = {
+            ...productData,
+            price: Number(productData.price),
+            stock: Number(productData.stock)
+        };
+
         try {
             if (isEdit) {
-                await updateProduct(id, productData, token);
+                await updateProduct(id, preparedData, token);
             } else {
-                await createProduct(productData, token);
+                await createProduct(preparedData, token);
             }
             navigate("/painel");
         } catch (err) {
