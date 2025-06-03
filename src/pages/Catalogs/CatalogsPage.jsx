@@ -59,7 +59,10 @@ const CatalogsPage = () => {
         <>
             <BannerHeader />
             <div className={styles.container}>
-                <h2 className={styles.title}>Catálogos</h2>
+                <div className={styles.sectionTitle}>
+                    <span>Catálogos</span>
+                </div>
+
                 <div className={styles.grid}>
                     {catalogs.map((catalog) => (
                         <div

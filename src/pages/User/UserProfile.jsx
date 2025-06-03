@@ -132,7 +132,7 @@ const UserProfile = () => {
                                 >
                                     <header className={styles.orderHeader}>
                                         <h4>
-                                            Pedido para o dia {new Date(order.date).toLocaleDateString()} -{" "}
+                                            {new Date(order.date).toLocaleDateString()} -{" "}
                                             {order.timeBlock}
                                         </h4>
                                         <span className={styles.status}>{order.status}</span>

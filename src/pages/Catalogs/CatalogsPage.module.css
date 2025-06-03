@@ -6,17 +6,46 @@
 
 .title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 2rem;
     color: #333;
 }
 
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    text-align: center;
+}
+
+.sectionTitle::before,
+.sectionTitle::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+    max-width: 200px;
+}
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1.5rem;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 
 .card {
     background-color: #fff;

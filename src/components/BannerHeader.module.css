@@ -21,6 +21,7 @@
     border-radius: 50%;
     bottom: -45px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
     height: 90px;
     left: 2.8rem;
     object-fit: cover;
@@ -46,7 +47,7 @@
 }
 
 .textArea {
-    padding-top: 3.5rem;
+    padding-top: 2rem;
     text-align: center;
 }
 

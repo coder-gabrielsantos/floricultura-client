@@ -51,10 +51,13 @@
 
 .grid {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
-    grid-template-columns: repeat(5, 1fr); /* 4 colunas fixas */
-    align-items: stretch;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
 }
+
 
 /* RESPONSIVIDADE */
 
