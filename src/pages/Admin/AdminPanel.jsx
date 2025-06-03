@@ -10,7 +10,8 @@ import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import styles from "./AdminPanel.module.css";
 
-const PRODUCTS_PER_PAGE = 4;
+const PRODUCTS_PER_PAGE = 2;
+const ORDERS_PER_PAGE = 2;
 
 const bufferToBase64 = (buffer) => {
     if (!buffer?.data || !Array.isArray(buffer.data)) return null;
@@ -32,6 +33,8 @@ const AdminPanel = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentOrderPage, setCurrentOrderPage] = useState(1);
+    const [expandedOrderId, setExpandedOrderId] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,33 +72,106 @@ const AdminPanel = () => {
             <div className={styles.section}>
                 <h3>Pedidos de Clientes</h3>
                 {orders.length > 0 ? (
-                    orders.map((order) => (
-                        <div key={order._id} className={styles.order}>
-                            <div className={styles.orderHeader}>
-                                <span className={styles.orderNumber}>Pedido #{order._id}</span>
-                                <span className={styles.date}>{order.date}</span>
-                            </div>
-                            <p className={styles.clientName}>
-                                Cliente: {order.client?.name || "Desconhecido"}
-                            </p>
-                            <ul className={styles.productList}>
-                                {order.products.map((item, i) => (
-                                    <li key={i} className={styles.productItem}>
-                                        {item.product.name} x{item.quantity}
-                                    </li>
-                                ))}
-                            </ul>
-                            <div className={styles.orderInfo}>
-                                <span className={styles.total}>Total: R$ {order.total?.toFixed(2) || "?"}</span>
-                                <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
-                                    {order.status}
-                                </span>
-                            </div>
-                        </div>
-                    ))
+                    orders
+                        .slice()
+                        .sort((a, b) => {
+                            const toTimestamp = (order) => {
+                                const [startHour] = order.timeBlock?.split("h") || ["00"];
+                                return new Date(`${order.date}T${startHour.padStart(2, "0")}:00`).getTime();
+                            };
+                            return toTimestamp(a) - toTimestamp(b);
+                        })
+                        .slice(
+                            (currentOrderPage - 1) * ORDERS_PER_PAGE,
+                            currentOrderPage * ORDERS_PER_PAGE
+                        )
+                        .map((order, index) => {
+                            const total = order.products.reduce(
+                                (sum, item) => sum + item.product.price * item.quantity,
+                                0
+                            );
+
+                            return (
+                                <div
+                                    key={order._id}
+                                    className={styles.order}
+                                    onClick={() =>
+                                        setExpandedOrderId((prev) =>
+                                            prev === order._id ? null : order._id
+                                        )
+                                    }
+                                >
+                                    <div className={styles.orderHeader}>
+                                        <span className={styles.orderNumber}>Pedido #{index + 1}</span>
+                                        <span className={styles.date}>{order.date}</span>
+                                    </div>
+                                    <p className={styles.clientName}>
+                                        Cliente: {order.client?.name || "Desconhecido"}
+                                    </p>
+                                    <ul className={styles.productList}>
+                                        {order.products.map((item, i) => (
+                                            <li key={i} className={styles.productItem}>
+                                                {item.product.name} x{item.quantity}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <div className={styles.orderInfo}>
+                                        <span className={styles.total}>
+                                            Total: R$ {total.toFixed(2)}
+                                        </span>
+                                        <span className={`${styles.status} ${styles[order.status.toLowerCase()]}`}>
+                                            {order.status}
+                                        </span>
+                                    </div>
+
+                                    {expandedOrderId === order._id && (
+                                        <div className={styles.orderDetails}>
+                                            <p><strong>Mensagem no Cartão:</strong> {order.cardMessage || "-"}</p>
+                                            <p><strong>Quem irá receber:</strong> {order.receiverName || "-"}</p>
+                                            <p><strong>Forma de Pagamento:</strong> {order.paymentMethod}</p>
+                                            <p><strong>Horário:</strong> {order.timeBlock}</p>
+                                            {order.deliveryType === "entrega" && (
+                                                <>
+                                                    <p><strong>Endereço:</strong></p>
+                                                    <ul className={styles.addressList}>
+                                                        <li><strong>Rua:</strong> {order.address?.street}</li>
+                                                        <li><strong>Número:</strong> {order.address?.number}</li>
+                                                        <li><strong>Bairro:</strong> {order.address?.neighborhood}</li>
+                                                        <li><strong>Complemento:</strong> {order.address?.complement}</li>
+                                                        <li><strong>Referência:</strong> {order.address?.reference}</li>
+                                                    </ul>
+                                                </>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
                 ) : (
                     <p style={{ color: "#777" }}>Nenhum pedido encontrado</p>
                 )}
+
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", marginTop: "1rem" }}>
+                    <button
+                        className={styles.pageBtn}
+                        disabled={currentOrderPage === 1}
+                        onClick={() => setCurrentOrderPage(currentOrderPage - 1)}
+                    >
+                        Anterior
+                    </button>
+
+                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>
+                    Página {currentOrderPage}
+                </span>
+
+                    <button
+                        className={styles.pageBtn}
+                        disabled={currentOrderPage === Math.ceil(orders.length / ORDERS_PER_PAGE)}
+                        onClick={() => setCurrentOrderPage(currentOrderPage + 1)}
+                    >
+                        Próximo
+                    </button>
+                </div>
             </div>
 
             <CatalogManager />
@@ -151,18 +227,28 @@ const AdminPanel = () => {
                     <p style={{ color: "#777" }}>Nenhum produto cadastrado</p>
                 )}
 
-                <div style={{ marginTop: "1rem", display: "flex", gap: "1rem", justifyContent: "center" }}>
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                            key={i}
-                            className={styles.pageBtn}
-                            onClick={() => setCurrentPage(i + 1)}
-                            style={{ fontWeight: currentPage === i + 1 ? "bold" : "normal" }}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
+                <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+                    <button
+                        className={styles.pageBtn}
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                    >
+                        Anterior
+                    </button>
+
+                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>
+                        Página {currentPage}
+                    </span>
+
+                    <button
+                        className={styles.pageBtn}
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                        Próximo
+                    </button>
                 </div>
+
 
                 <button
                     className={styles.newProduct}
