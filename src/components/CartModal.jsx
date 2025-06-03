@@ -5,11 +5,19 @@ import { getCart, removeFromCart } from "../api/_index.js";
 
 const CartModal = ({ onClose }) => {
     const navigate = useNavigate();
-
     const [cart, setCart] = useState(null);
-    const [closing, setClosing] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     const token = JSON.parse(localStorage.getItem("user"))?.token;
+
+    useEffect(() => {
+        setVisible(true);
+
+        if (!token) return;
+        getCart(token)
+            .then(setCart)
+            .catch((err) => console.error("Erro ao buscar carrinho:", err));
+    }, []);
 
     const removeItem = async (productId) => {
         try {
@@ -23,46 +31,9 @@ const CartModal = ({ onClose }) => {
     };
 
     const handleClose = () => {
-        setClosing(true);
-        setTimeout(() => {
-            onClose();
-        }, 300); // mesmo tempo da animação
+        setVisible(false);
+        setTimeout(onClose, 250);
     };
-
-    useEffect(() => {
-        const style = document.createElement("style");
-        style.innerHTML = `
-            @keyframes slideUp {
-              from { opacity: 0; transform: translateY(30px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-        
-            @keyframes slideDown {
-              from { opacity: 1; transform: translateY(0); }
-              to { opacity: 0; transform: translateY(30px); }
-            }
-        
-            @keyframes fadeInOverlay {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
-        
-            @keyframes fadeOutOverlay {
-              from { opacity: 1; }
-              to { opacity: 0; }
-            }
-          `;
-        document.head.appendChild(style);
-        return () => document.head.removeChild(style);
-    }, []);
-
-    useEffect(() => {
-        const token = JSON.parse(localStorage.getItem("user"))?.token;
-        if (!token) return;
-        getCart(token)
-            .then(setCart)
-            .catch((err) => console.error("Erro ao buscar carrinho:", err));
-    }, []);
 
     const total = cart?.items?.reduce(
         (sum, item) => sum + item.quantity * item.product.price,
@@ -70,14 +41,23 @@ const CartModal = ({ onClose }) => {
     );
 
     return (
-        <div style={{
-            ...styles.overlay,
-            animation: `${closing ? "fadeOutOverlay" : "fadeInOverlay"} 0.3s ease`
-        }} onClick={handleClose}>
-            <div style={{
-                ...styles.modal,
-                animation: `${closing ? "slideDown" : "slideUp"} 0.3s ease`
-            }} onClick={(e) => e.stopPropagation()}>
+        <div
+            style={{
+                ...styles.overlay,
+                opacity: visible ? 1 : 0,
+                transition: "opacity 0.3s ease"
+            }}
+            onClick={handleClose}
+        >
+            <div
+                style={{
+                    ...styles.modal,
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? "scale(1)" : "scale(0.95)",
+                    transition: "opacity 0.3s ease, transform 0.3s ease"
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div style={styles.header}>
                     <h2 style={styles.title}>Meu Carrinho</h2>
                     <button style={styles.closeBtn} onClick={handleClose}>
@@ -108,7 +88,6 @@ const CartModal = ({ onClose }) => {
                                     </button>
                                 </div>
                             </div>
-
                         ))
                     ) : (
                         <p style={styles.empty}>Sua sacola está vazia.</p>
@@ -120,7 +99,22 @@ const CartModal = ({ onClose }) => {
                         <span>Total</span>
                         <strong>R$ {total?.toFixed(2) || "0,00"}</strong>
                     </div>
-                    <button onClick={() => navigate("/checkout")} style={styles.button}>
+                    <button
+                        onClick={() => {
+                            if (!cart?.items?.length) {
+                                alert("Sua sacola está vazia!");
+                                return;
+                            }
+                            handleClose();
+                            navigate("/checkout");
+                        }}
+                        style={{
+                            ...styles.button,
+                            backgroundColor: cart?.items?.length ? "#4caf50" : "#ccc",
+                            cursor: cart?.items?.length ? "pointer" : ""
+                        }}
+                        disabled={!cart?.items?.length}
+                    >
                         Finalizar Pedido
                     </button>
                 </div>
@@ -132,23 +126,52 @@ const CartModal = ({ onClose }) => {
 export default CartModal;
 
 const styles = {
+    overlay: {
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        display: "flex",
+        height: "100vh",
+        justifyContent: "center",
+        left: 0,
+        position: "fixed",
+        top: 0,
+        width: "100vw",
+        zIndex: 999
+    },
+    modal: {
+        backgroundColor: "#fff",
+        borderRadius: "16px",
+        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
+        maxHeight: "90vh",
+        maxWidth: "600px",
+        padding: "2rem",
+        position: "relative",
+        width: "100%"
+    },
     header: {
         alignItems: "center",
         display: "flex",
         justifyContent: "space-between",
         marginBottom: "1.5rem"
     },
-    button: {
-        backgroundColor: "#4caf50",
+    title: {
+        fontSize: "1.5rem",
+        fontWeight: 600,
+        textAlign: "center"
+    },
+    closeBtn: {
+        background: "transparent",
         border: "none",
-        borderRadius: "10px",
-        color: "white",
         cursor: "pointer",
-        fontSize: "1rem",
-        fontWeight: 500,
-        marginTop: "1rem",
-        padding: "0.75rem",
-        width: "100%"
+        fontSize: "1.4rem",
+        padding: "0 0 0 10px"
+    },
+    content: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxHeight: "300px",
+        overflowY: "auto"
     },
     card: {
         backgroundColor: "#f9f9f9",
@@ -159,47 +182,9 @@ const styles = {
         padding: "1rem",
         position: "relative"
     },
-    actions: {
-        alignItems: "center",
-        display: "flex",
-        gap: "1rem"
-    },
-    content: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        maxHeight: "300px",
-        overflowY: "auto"
-    },
-    details: {
-        color: "#666",
-        fontSize: "0.9rem",
-        marginTop: "0.25rem"
-    },
-    empty: {
-        color: "#777",
-        fontSize: "0.95rem",
-        textAlign: "center"
-    },
-    footer: {
-        borderTop: "1px solid #ddd",
-        marginTop: "1.5rem",
-        paddingTop: "1rem"
-    },
     info: {
         display: "flex",
         flexDirection: "column"
-    },
-    modal: {
-        animation: "slideUp 0.3s ease",
-        backgroundColor: "#fff",
-        borderRadius: "16px",
-        boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
-        maxHeight: "90vh",
-        maxWidth: "600px",
-        padding: "2rem",
-        position: "relative",
-        width: "100%"
     },
     name: {
         fontSize: "1rem",
@@ -210,18 +195,15 @@ const styles = {
         textOverflow: "ellipsis",
         whiteSpace: "nowrap"
     },
-    overlay: {
+    details: {
+        color: "#666",
+        fontSize: "0.9rem",
+        marginTop: "0.25rem"
+    },
+    actions: {
         alignItems: "center",
-        animation: "fadeInOverlay 0.3s ease",
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
         display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        left: 0,
-        position: "fixed",
-        top: 0,
-        width: "100vw",
-        zIndex: 999
+        gap: "1rem"
     },
     price: {
         fontSize: "1rem",
@@ -240,22 +222,32 @@ const styles = {
         justifyContent: "center",
         padding: "0 0.75rem"
     },
-    closeBtn: {
-        background: "transparent",
-        border: "none",
-        cursor: "pointer",
-        fontSize: "1.4rem",
-        padding: "0 0 0 10px"
-    },
-    title: {
-        fontSize: "1.5rem",
-        fontWeight: 600,
-        textAlign: "center"
+    footer: {
+        borderTop: "1px solid #ddd",
+        marginTop: "1.5rem",
+        paddingTop: "1rem"
     },
     totalLine: {
         alignItems: "center",
         display: "flex",
         fontSize: "1.1rem",
         justifyContent: "space-between"
+    },
+    button: {
+        backgroundColor: "#4caf50",
+        border: "none",
+        borderRadius: "10px",
+        color: "white",
+        cursor: "pointer",
+        fontSize: "1rem",
+        fontWeight: 500,
+        marginTop: "1rem",
+        padding: "0.75rem",
+        width: "100%"
+    },
+    empty: {
+        color: "#777",
+        fontSize: "0.95rem",
+        textAlign: "center"
     }
 };
