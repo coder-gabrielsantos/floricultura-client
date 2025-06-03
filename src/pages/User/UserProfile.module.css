@@ -436,3 +436,26 @@
     opacity: 0.5;
     cursor: default;
 }
+
+.paymentAction {
+    margin-top: 1.2rem;
+    text-align: right;
+}
+
+.payBtn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payBtn:hover {
+    background-color: #222;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}

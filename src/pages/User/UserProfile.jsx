@@ -212,9 +212,9 @@ const UserProfile = () => {
                                                 </div>
                                             </div>
 
-                                            <div className={styles.detailRow}>
+                                            <div className={styles.paymentAction}>
                                                 <button
-                                                    className={styles.modalBtn}
+                                                    className={styles.payBtn}
                                                     onClick={() => console.log("Pagar pedido:", order._id)}
                                                 >
                                                     Realizar Pagamento
