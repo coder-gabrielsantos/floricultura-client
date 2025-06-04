@@ -62,7 +62,7 @@ const AdminPanel = () => {
 
     const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
-    if (loading) return <Loader />;
+    if (loading) return <Loader/>;
 
     return (
         <div className={styles.container}>
@@ -188,30 +188,32 @@ const AdminPanel = () => {
                     <p style={{ color: "#777" }}>Nenhum pedido encontrado</p>
                 )}
 
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", marginTop: "1rem" }}>
-                    <button
-                        className={styles.pageBtn}
-                        disabled={currentOrderPage === 1}
-                        onClick={() => setCurrentOrderPage(currentOrderPage - 1)}
-                    >
-                        Anterior
-                    </button>
+                {orders.length > ORDERS_PER_PAGE && (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", marginTop: "1rem" }}>
+                        <button
+                            className={styles.pageBtn}
+                            disabled={currentOrderPage === 1}
+                            onClick={() => setCurrentOrderPage(currentOrderPage - 1)}
+                        >
+                            Anterior
+                        </button>
 
-                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>
-                    Página {currentOrderPage}
-                </span>
+                        <span style={{ fontWeight: "500", fontSize: "1rem" }}>
+                            Página {currentOrderPage}
+                        </span>
 
-                    <button
-                        className={styles.pageBtn}
-                        disabled={currentOrderPage === Math.ceil(orders.length / ORDERS_PER_PAGE)}
-                        onClick={() => setCurrentOrderPage(currentOrderPage + 1)}
-                    >
-                        Próximo
-                    </button>
-                </div>
+                        <button
+                            className={styles.pageBtn}
+                            disabled={currentOrderPage === Math.ceil(orders.length / ORDERS_PER_PAGE)}
+                            onClick={() => setCurrentOrderPage(currentOrderPage + 1)}
+                        >
+                            Próximo
+                        </button>
+                    </div>
+                )}
             </div>
 
-            <CatalogManager />
+            <CatalogManager/>
 
             <div className={styles.section}>
                 <h3>Produtos Cadastrados</h3>
@@ -264,28 +266,29 @@ const AdminPanel = () => {
                     <p style={{ color: "#777" }}>Nenhum produto cadastrado</p>
                 )}
 
-                <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-                    <button
-                        className={styles.pageBtn}
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                    >
-                        Anterior
-                    </button>
+                {products.length > PRODUCTS_PER_PAGE && (
+                    <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+                        <button
+                            className={styles.pageBtn}
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                        >
+                            Anterior
+                        </button>
 
-                    <span style={{ fontWeight: "500", fontSize: "1rem" }}>
+                        <span style={{ fontWeight: "500", fontSize: "1rem" }}>
                         Página {currentPage}
                     </span>
 
-                    <button
-                        className={styles.pageBtn}
-                        disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(currentPage + 1)}
-                    >
-                        Próximo
-                    </button>
-                </div>
-
+                        <button
+                            className={styles.pageBtn}
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                        >
+                            Próximo
+                        </button>
+                    </div>
+                )}
 
                 <button
                     className={styles.newProduct}
