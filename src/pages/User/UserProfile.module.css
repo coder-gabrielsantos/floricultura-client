@@ -460,6 +460,12 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
+.payBtn:disabled {
+    background-color: #ccc;
+    color: #666;
+    opacity: 0.7;
+}
+
 .fadeIn {
     animation: fadeIn 0.3s ease forwards;
     opacity: 0;

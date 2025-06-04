@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getOrders, updateProfile, startPayment } from "../../api/_index.js";
+import { getUserData, deleteAddress, getOrders, updateProfile } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -58,29 +58,7 @@ const UserProfile = () => {
     };
 
     const handlePayment = async (order) => {
-        try {
-            const amount = order.products.reduce(
-                (sum, item) => sum + (item.product?.price || 0) * item.quantity,
-                0
-            );
-
-            const data = await startPayment({
-                referenceId: order._id,
-                amount,
-                buyerName: profile.name,
-                buyerEmail: profile.email || "teste@sandbox.pagseguro.com.br", // ou use o e-mail real se disponível
-                buyerPhone: profile.phone.replace(/\D/g, "") || "999999999", // remove caracteres não numéricos
-            });
-
-            if (data.redirectURL) {
-                window.location.href = data.redirectURL;
-            } else {
-                alert("Falha ao redirecionar para o PagBank.");
-            }
-        } catch (err) {
-            console.error("Erro ao iniciar pagamento:", err);
-            alert("Erro ao processar pagamento.");
-        }
+        console.log("Implementar pagamento...")
     };
 
     useEffect(() => {
@@ -257,6 +235,7 @@ const UserProfile = () => {
                                                     <button
                                                         className={styles.payBtn}
                                                         onClick={() => handlePayment(order)}
+                                                        disabled
                                                     >
                                                         Realizar Pagamento (em breve)
                                                     </button>

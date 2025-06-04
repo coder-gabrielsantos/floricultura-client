@@ -166,9 +166,10 @@
 }
 
 .status {
-    border-radius: 20px;
+    border-radius: 5px;
     font-size: 0.85rem;
     font-weight: 600;
+    padding: 8px 6px;
     text-transform: capitalize;
 }
 
@@ -274,3 +275,18 @@
     padding-left: 1rem;
 }
 
+.finishBtn {
+    background-color: #4caf50;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s;
+}
+
+.finishBtn:hover {
+    background-color: #3e8e41;
+}

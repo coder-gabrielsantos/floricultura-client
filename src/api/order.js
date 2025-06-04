@@ -21,3 +21,11 @@ export const getAvailableBlocks = async (date) => {
     const response = await API.get(`/orders/available-blocks?date=${date}`);
     return response.data.availableBlocks;
 };
+
+// Update order status
+export const updateOrderStatus = async (orderId, status, token) => {
+    const response = await API.put(`/orders/${orderId}/status`, { status }, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+};

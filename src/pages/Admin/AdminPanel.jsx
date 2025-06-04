@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
     getOrders,
     getAllProducts,
-    deleteProduct
+    deleteProduct,
+    updateOrderStatus
 } from "../../api/_index.js";
 import CatalogManager from "../../components/CatalogManager.jsx";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
@@ -75,10 +76,20 @@ const AdminPanel = () => {
                     orders
                         .slice()
                         .sort((a, b) => {
+                            const statusOrder = { pendente: 0, confirmado: 1, cancelado: 2, entregue: 3 };
+                            const aStatus = statusOrder[a.status] ?? 99;
+                            const bStatus = statusOrder[b.status] ?? 99;
+
+                            if (aStatus !== bStatus) {
+                                return aStatus - bStatus;
+                            }
+
+                            // Se status for igual, ordena por data/hora
                             const toTimestamp = (order) => {
                                 const [startHour] = order.timeBlock?.split("h") || ["00"];
                                 return new Date(`${order.date}T${startHour.padStart(2, "0")}:00`).getTime();
                             };
+
                             return toTimestamp(a) - toTimestamp(b);
                         })
                         .slice(
@@ -102,7 +113,9 @@ const AdminPanel = () => {
                                     }
                                 >
                                     <div className={styles.orderHeader}>
-                                        <span className={styles.orderNumber}>Pedido #{index + 1}</span>
+                                        <span className={styles.orderNumber}>
+                                            Pedido #{(currentOrderPage - 1) * ORDERS_PER_PAGE + index + 1}
+                                        </span>
                                         <span className={styles.date}>{order.date}</span>
                                     </div>
                                     <p className={styles.clientName}>
@@ -141,6 +154,30 @@ const AdminPanel = () => {
                                                         <li><strong>Referência:</strong> {order.address?.reference}</li>
                                                     </ul>
                                                 </>
+                                            )}
+
+                                            {order.status !== "entregue" && (
+                                                <button
+                                                    className={styles.finishBtn}
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
+                                                        const token = JSON.parse(localStorage.getItem("user"))?.token;
+                                                        try {
+                                                            const currentId = order._id;
+                                                            const currentPageBackup = currentOrderPage;
+
+                                                            await updateOrderStatus(currentId, "entregue", token);
+                                                            const refreshedOrders = await getOrders(token);
+                                                            setOrders(refreshedOrders);
+                                                            setCurrentOrderPage(currentPageBackup);
+                                                            setExpandedOrderId(currentId);
+                                                        } catch (err) {
+                                                            console.error("Erro ao marcar como entregue:", err);
+                                                        }
+                                                    }}
+                                                >
+                                                    Marcar como Concluído
+                                                </button>
                                             )}
                                         </div>
                                     )}
