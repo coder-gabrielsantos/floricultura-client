@@ -205,22 +205,19 @@ const Checkout = () => {
                         />
                     </div>
 
-                    {date && (
-                        <div className={styles.selectContainer}>
-                            <Select
-                                options={availableBlocks.map((block) => ({
-                                    value: block,
-                                    label: block
-                                }))}
-                                value={
-                                    timeBlock ? { value: timeBlock, label: timeBlock } : null
-                                }
-                                onChange={(option) => setTimeBlock(option.value)}
-                                classNamePrefix="custom-select"
-                                placeholder="Selecione o horário"
-                            />
-                        </div>
-                    )}
+                    <div className={styles.selectContainer}>
+                        <Select
+                            isDisabled={!date}
+                            options={availableBlocks.map((block) => ({
+                                value: block,
+                                label: block
+                            }))}
+                            value={timeBlock ? { value: timeBlock, label: timeBlock } : null}
+                            onChange={(option) => setTimeBlock(option.value)}
+                            classNamePrefix="custom-select"
+                            placeholder="Selecione o horário"
+                        />
+                    </div>
                 </div>
             </div>
 

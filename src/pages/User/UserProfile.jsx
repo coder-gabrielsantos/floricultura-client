@@ -59,23 +59,27 @@ const UserProfile = () => {
 
     const handlePayment = async (order) => {
         try {
+            const amount = order.products.reduce(
+                (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+                0
+            );
+
             const data = await startPayment({
-                description: `Order #${order._id}`,
-                amount: order.products.reduce(
-                    (sum, item) => sum + (item.product?.price || 0) * item.quantity,
-                    0
-                ),
-                reference: order._id,
+                referenceId: order._id,
+                amount,
+                buyerName: profile.name,
+                buyerEmail: profile.email || "teste@sandbox.pagseguro.com.br", // ou use o e-mail real se disponível
+                buyerPhone: profile.phone.replace(/\D/g, "") || "999999999", // remove caracteres não numéricos
             });
 
             if (data.redirectURL) {
                 window.location.href = data.redirectURL;
             } else {
-                alert("Failed to redirect to payment.");
+                alert("Falha ao redirecionar para o PagBank.");
             }
         } catch (err) {
-            console.error("Error while processing payment:", err);
-            alert("Payment could not be started.");
+            console.error("Erro ao iniciar pagamento:", err);
+            alert("Erro ao processar pagamento.");
         }
     };
 
@@ -254,7 +258,7 @@ const UserProfile = () => {
                                                         className={styles.payBtn}
                                                         onClick={() => handlePayment(order)}
                                                     >
-                                                        Realizar Pagamento
+                                                        Realizar Pagamento (em breve)
                                                     </button>
                                                 </div>
                                             )}

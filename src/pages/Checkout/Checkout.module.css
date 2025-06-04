@@ -104,6 +104,13 @@
     margin-top: 0.5rem;
 }
 
+@media (max-width: 495px) {
+    .datetimeRow {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
 .input {
     border: 1px solid #ccc;
     border-radius: 8px;
