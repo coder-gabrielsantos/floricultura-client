@@ -6,6 +6,15 @@ import ProductCard from "../../components/ProductCard";
 import styles from "./Home.module.css";
 import Loader from "../../components/Loader";
 
+const CATEGORY_CARDS = [
+    "Arranjo Floral",
+    "Buquê",
+    "Casamento",
+    "Coroa e Arranjo Fúnebre",
+    "Flor Individual",
+    "Ramalhete"
+];
+
 const bufferToBase64 = (buffer) => {
     if (!buffer) return null;
     const binary = new Uint8Array(buffer).reduce(
@@ -20,6 +29,10 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const [cart, setCart] = useState(null);
+
+    const categoryParam = searchParams.get("category");
+    const catalogParam = searchParams.get("catalog");
+    const isBrowsingAll = !categoryParam && !catalogParam;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +57,12 @@ const Home = () => {
                     };
                 });
 
-                setProducts(processed);
+                if (categoryParam) {
+                    const filtered = processed.filter((p) => p.category === categoryParam);
+                    setProducts(filtered);
+                } else {
+                    setProducts(processed);
+                }
             } catch (err) {
                 console.error("Erro ao carregar produtos:", err);
             } finally {
@@ -67,7 +85,24 @@ const Home = () => {
         <>
             <BannerHeader />
             <div className={styles.container}>
-                {products.length === 0 ? (
+                {isBrowsingAll ? (
+                    <div className={styles.grid}>
+                        {CATEGORY_CARDS.map((cat) => (
+                            <div
+                                key={cat}
+                                className={styles.categoryCard}
+                                onClick={() => {
+                                    const params = new URLSearchParams();
+                                    params.set("category", cat);
+                                    window.history.pushState({}, "", `/produtos?${params.toString()}`);
+                                    window.dispatchEvent(new Event("popstate"));
+                                }}
+                            >
+                                <p>{cat}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : products.length === 0 ? (
                     <p className={styles.empty}>Nenhum produto encontrado.</p>
                 ) : (
                     <div className={styles.grid}>

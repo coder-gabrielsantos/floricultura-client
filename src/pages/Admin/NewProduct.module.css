@@ -176,3 +176,17 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
+
+.selectLabel {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.select {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}

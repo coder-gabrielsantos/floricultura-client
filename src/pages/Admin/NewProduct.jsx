@@ -4,6 +4,15 @@ import Select from "react-select";
 import { getCatalogs, createProduct, updateProduct, getProductById } from "../../api/_index";
 import styles from "./NewProduct.module.css";
 
+const FIXED_CATEGORIES = [
+    { value: "Arranjo Floral", label: "Arranjo Floral" },
+    { value: "Buquê", label: "Buquê" },
+    { value: "Casamento", label: "Casamento" },
+    { value: "Coroa e Arranjo Fúnebre", label: "Coroa e Arranjo Fúnebre" },
+    { value: "Flor Individual", label: "Flor Individual" },
+    { value: "Ramalhete", label: "Ramalhete" }
+];
+
 const NewProduct = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -14,7 +23,8 @@ const NewProduct = () => {
         price: "",
         stock: "",
         images: "",
-        catalogs: []
+        catalogs: [],
+        category: ""
     });
 
     const [catalogs, setCatalogs] = useState([]);
@@ -52,7 +62,8 @@ const NewProduct = () => {
                         price: product.price,
                         stock: product.stock,
                         images: imageData,
-                        catalogs: product.catalogs?.map((c) => c._id) || []
+                        catalogs: product.catalogs?.map((c) => c._id) || [],
+                        category: product.category || ""
                     });
                 }
             } catch (err) {
@@ -107,6 +118,7 @@ const NewProduct = () => {
 
         try {
             if (isEdit) {
+                console.log(preparedData)
                 await updateProduct(id, preparedData, token);
             } else {
                 await createProduct(preparedData, token);
@@ -202,6 +214,7 @@ const NewProduct = () => {
                     <Select
                         isMulti
                         name="catalogs"
+                        placeholder=""
                         options={catalogs.map((c) => ({
                             value: c._id,
                             label: c.name
@@ -219,6 +232,23 @@ const NewProduct = () => {
                                 catalogs: selected.map((s) => s.value)
                             }))
                         }
+                    />
+                </div>
+
+                <div className={styles.selectContainer}>
+                    <label htmlFor="category" className={styles.selectLabel}>Categoria</label>
+                    <Select
+                        options={FIXED_CATEGORIES}
+                        value={
+                            productData.category
+                                ? FIXED_CATEGORIES.find((c) => c.value === productData.category)
+                                : null
+                        }
+                        onChange={(option) =>
+                            setProductData((prev) => ({ ...prev, category: option.value }))
+                        }
+                        placeholder=""
+                        classNamePrefix="custom-select"
                     />
                 </div>
 
