@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getOrders, updateProfile } from "../../api/_index.js";
+import { getUserData, deleteAddress, getOrders, updateProfile, startPayment } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -19,6 +19,7 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(true);
     const [confirming, setConfirming] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [passwordError, setPasswordError] = useState("");
 
     const paginatedOrders = orders.slice(
         (currentPage - 1) * ORDERS_PER_PAGE,
@@ -33,13 +34,48 @@ const UserProfile = () => {
     });
 
     const handleUpdateProfile = async () => {
+        setPasswordError("");
+
+        if (editData.newPassword && !editData.currentPassword) {
+            setPasswordError("Informe sua senha atual para alterar a senha");
+            return;
+        }
+
         try {
             await updateProfile(editData);
             const updated = await getUserData();
             setProfile(updated);
             setShowEditModal(false);
         } catch (err) {
-            alert(err.response?.data?.message || "Erro ao atualizar");
+            const msg = err.response?.data?.message || "Erro ao atualizar";
+
+            if (msg.toLowerCase().includes("incorrect") || msg.toLowerCase().includes("senha atual incorreta")) {
+                setPasswordError("Senha atual incorreta");
+            } else {
+                setPasswordError(msg);
+            }
+        }
+    };
+
+    const handlePayment = async (order) => {
+        try {
+            const data = await startPayment({
+                description: `Order #${order._id}`,
+                amount: order.products.reduce(
+                    (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+                    0
+                ),
+                reference: order._id,
+            });
+
+            if (data.redirectURL) {
+                window.location.href = data.redirectURL;
+            } else {
+                alert("Failed to redirect to payment.");
+            }
+        } catch (err) {
+            console.error("Error while processing payment:", err);
+            alert("Payment could not be started.");
         }
     };
 
@@ -212,14 +248,16 @@ const UserProfile = () => {
                                                 </div>
                                             </div>
 
-                                            <div className={styles.paymentAction}>
-                                                <button
-                                                    className={styles.payBtn}
-                                                    onClick={() => console.log("Pagar pedido:", order._id)}
-                                                >
-                                                    Realizar Pagamento
-                                                </button>
-                                            </div>
+                                            {order.status === "pendente" && (
+                                                <div className={styles.paymentAction}>
+                                                    <button
+                                                        className={styles.payBtn}
+                                                        onClick={() => handlePayment(order)}
+                                                    >
+                                                        Realizar Pagamento
+                                                    </button>
+                                                </div>
+                                            )}
                                         </>
                                     ) : (
                                         <p className={styles.clickHint}>Clique para ver mais detalhes</p>
@@ -273,7 +311,7 @@ const UserProfile = () => {
             {showEditModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalBox}>
-                        <h3 className={styles.modalTitle}>Atualizar Dados</h3>
+                        <h3 className={styles.modalTitle}>Editar Dados</h3>
 
                         <input
                             type="text"
@@ -293,19 +331,25 @@ const UserProfile = () => {
 
                         <input
                             type="password"
-                            placeholder="Senha atual (obrigatória para trocar)"
-                            value={editData.currentPassword}
-                            onChange={(e) => setEditData({ ...editData, currentPassword: e.target.value })}
-                            className={styles.modalInput}
-                        />
-
-                        <input
-                            type="password"
                             placeholder="Nova senha (opcional)"
                             value={editData.newPassword}
                             onChange={(e) => setEditData({ ...editData, newPassword: e.target.value })}
                             className={styles.modalInput}
                         />
+
+                        {editData.newPassword && (
+                            <input
+                                type="password"
+                                placeholder="Informe a senha atual"
+                                value={editData.currentPassword}
+                                onChange={(e) => setEditData({ ...editData, currentPassword: e.target.value })}
+                                className={`${styles.modalInput} ${styles.fadeIn}`}
+                            />
+                        )}
+
+                        {passwordError && (
+                            <p className={styles.errorMsg}>{passwordError}</p>
+                        )}
 
                         <div className={styles.modalActionsColumn}>
                             <button className={styles.modalBtn} onClick={handleUpdateProfile}>
