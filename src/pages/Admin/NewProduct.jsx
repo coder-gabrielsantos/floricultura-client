@@ -116,6 +116,10 @@ const NewProduct = () => {
             stock: Number(productData.stock)
         };
 
+        if (!productData.category) {
+            delete preparedData.category;
+        }
+
         try {
             if (isEdit) {
                 console.log(preparedData)
