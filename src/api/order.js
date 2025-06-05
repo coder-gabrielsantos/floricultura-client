@@ -23,11 +23,12 @@ export const getAvailableBlocks = async (date) => {
 };
 
 // Start payment via Mercado Pago
-export const startPayment = async ({ description, price, quantity }) => {
+export const startPayment = async ({ description, price, quantity, orderId }) => {
     const response = await API.post("/payments/create-preference", {
         description,
         price,
-        quantity
+        quantity,
+        orderId
     });
     return response.data.init_point;
 };
