@@ -124,7 +124,7 @@ const AdminPanel = () => {
                                     <ul className={styles.productList}>
                                         {order.products.map((item, i) => (
                                             <li key={i} className={styles.productItem}>
-                                                {item.product.name} x{item.quantity}
+                                                {item.product?.name || "Produto removido"} x{item.quantity}
                                             </li>
                                         ))}
                                     </ul>
