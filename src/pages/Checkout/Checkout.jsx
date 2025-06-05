@@ -67,7 +67,7 @@ const Checkout = () => {
             };
 
             const result = await createOrder(orderData, token);
-            console.log("Pedido criado:", result);
+            console.log("Pedido criado:", result.order._id);
 
             if (selectedPayment === "online") {
                 const initPoint = await startPayment({
