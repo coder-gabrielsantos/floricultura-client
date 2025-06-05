@@ -97,10 +97,10 @@ const AdminPanel = () => {
                             currentOrderPage * ORDERS_PER_PAGE
                         )
                         .map((order, index) => {
-                            const total = order.products.reduce(
-                                (sum, item) => sum + item.product.price * item.quantity,
-                                0
-                            );
+                            const total = order.products.reduce((sum, item) => {
+                                if (!item.product) return sum;
+                                return sum + item.product.price * item.quantity;
+                            }, 0);
 
                             return (
                                 <div
