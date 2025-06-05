@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { getUserData, getCart, getAvailableBlocks, createOrder } from "../../api/_index";
+import { getUserData, getCart, getAvailableBlocks, createOrder, startPayment } from "../../api/_index";
 import Loader from "../../components/Loader";
 import styles from "./Checkout.module.css";
 
@@ -66,8 +66,19 @@ const Checkout = () => {
                 }))
             };
 
-            await createOrder(orderData, token);
-            navigate("/perfil");
+            const result = await createOrder(orderData, token);
+
+            if (selectedPayment === "online") {
+                const initPoint = await startPayment({
+                    description: "Pedido Floricultura",
+                    price: total,
+                    quantity: 1,
+                    orderId: result.order._id
+                });
+                window.location.href = initPoint;
+            } else {
+                navigate("/perfil");
+            }
         } catch (err) {
             console.error("Erro ao criar pedido:", err);
             alert("Erro ao finalizar pedido.");
@@ -224,17 +235,15 @@ const Checkout = () => {
             <div className={styles.section}>
                 <h3>Forma de Pagamento</h3>
                 <div className={styles.paymentGrid}>
-                    {["pix", "cartao", "especie"].map((method) => (
+                    {["online", "especie"].map((method) => (
                         <div
                             key={method}
                             className={`${styles.paymentOption} ${
-                                selectedPayment === method
-                                    ? styles.selected
-                                    : ""
+                                selectedPayment === method ? styles.selected : ""
                             }`}
                             onClick={() => setSelectedPayment(method)}
                         >
-                            {method.toUpperCase()}
+                            {method === "online" ? "PAGAMENTO ONLINE" : "ESPÉCIE"}
                         </div>
                     ))}
                 </div>

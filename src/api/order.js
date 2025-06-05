@@ -22,6 +22,16 @@ export const getAvailableBlocks = async (date) => {
     return response.data.availableBlocks;
 };
 
+// Start payment via Mercado Pago
+export const startPayment = async ({ description, price, quantity }) => {
+    const response = await API.post("/payments/create-preference", {
+        description,
+        price,
+        quantity
+    });
+    return response.data.init_point;
+};
+
 // Update order status
 export const updateOrderStatus = async (orderId, status, token) => {
     const response = await API.put(`/orders/${orderId}/status`, { status }, {

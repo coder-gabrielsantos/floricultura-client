@@ -10,6 +10,7 @@ import UserAddress from "./pages/User/UserAddress.jsx";
 import AdminPanel from "./pages/Admin/AdminPanel.jsx";
 import NewProduct from "./pages/Admin/NewProduct.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
+import PaymentSuccess from "./components/PaymentSuccess";
 
 function App() {
     const [showLogin, setShowLogin] = useState(false);
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/novo-produto" element={<NewProduct />} />
                 <Route path="/editar-produto/:id" element={<NewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/sucesso" element={<PaymentSuccess />} />
             </Routes>
         </Router>
     );
