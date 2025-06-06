@@ -6,7 +6,7 @@ import CatalogsPage from "./pages/Catalogs/CatalogsPage.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
 import PaymentSuccess from "./components/PaymentSuccess.jsx";
-import PaymentFailure from "./components/PaymentFailure";
+import PaymentFailure from "./components/PaymentFailure.jsx";
 import UserProfile from "./pages/User/UserProfile.jsx";
 import UserAddress from "./pages/User/UserAddress.jsx";
 import AdminPanel from "./pages/Admin/AdminPanel.jsx";
