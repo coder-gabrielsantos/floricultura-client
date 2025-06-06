@@ -54,26 +54,30 @@ const Checkout = () => {
             const orderData = {
                 receiverName,
                 cardMessage,
-                date,
-                timeBlock,
                 deliveryType,
                 paymentMethod: selectedPayment,
-                address: deliveryType === "retirada" ? null : selectedAddress,
-                products: cart.items.map(item => ({
+                products: cart.items.map((item) => ({
                     product: item.product._id,
                     quantity: item.quantity
                 }))
             };
 
+            if (deliveryType === "entrega") {
+                if (selectedAddress) {
+                    orderData.address = selectedAddress;
+                }
+                if (date) orderData.date = date;
+                if (timeBlock) orderData.timeBlock = timeBlock;
+            }
+
             const result = await createOrder(orderData, token);
-            console.log("Pedido criado:", result.order._id);
 
             if (selectedPayment === "online") {
                 const initPoint = await startPayment({
                     description: "Pedido Floricultura",
                     price: total,
                     quantity: 1,
-                    orderId: result.order._id
+                    orderId: result._id
                 });
                 window.location.href = initPoint;
             } else {
