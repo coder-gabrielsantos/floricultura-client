@@ -10,7 +10,10 @@ const PaymentFailure = () => {
                 Ocorreu um problema ao processar seu pagamento. Nenhum valor foi cobrado.
             </p>
             <p style={styles.text}>
-                Você pode tentar novamente ou entrar em contato com a loja.
+                Você pode tentar realizar o pagamento novamente acessando seu perfil dentro de 15 minutos.
+            </p>
+            <p style={styles.text}>
+                Após esse prazo, o pedido será cancelado automaticamente.
             </p>
             <button style={styles.button} onClick={() => navigate("/")}>
                 Voltar para a Loja
