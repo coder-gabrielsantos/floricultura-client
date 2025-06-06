@@ -5,15 +5,12 @@ const PaymentFailure = () => {
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>❌ Pagamento não concluído</h1>
+            <h1 style={styles.title}>Pagamento não concluído</h1>
             <p style={styles.text}>
-                Ocorreu um problema ao processar seu pagamento. Nenhum valor foi cobrado.
+                Ocorreu um problema ao processar seu pagamento.
             </p>
             <p style={styles.text}>
                 Você pode tentar realizar o pagamento novamente acessando seu perfil dentro de 15 minutos.
-            </p>
-            <p style={styles.text}>
-                Após esse prazo, o pedido será cancelado automaticamente.
             </p>
             <button style={styles.button} onClick={() => navigate("/")}>
                 Voltar para a Loja
@@ -54,6 +51,7 @@ const styles = {
         cursor: "pointer",
         fontSize: "1rem",
         fontWeight: 600,
+        marginTop: "20px",
         padding: "0.8rem 2rem"
     }
 };
