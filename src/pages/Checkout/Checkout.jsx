@@ -279,7 +279,7 @@ const Checkout = () => {
                 onClick={handleConfirm}
                 className={styles.confirmBtn}
                 disabled={!isFormValid}
-                style={{ opacity: isFormValid ? 1 : 0.6 }}
+                style={{ cursor: isFormValid ? "pointer" : "" }}
             >
                 {isFormValid ? "Confirmar Pedido" : "Preencha todos os campos"}
             </button>

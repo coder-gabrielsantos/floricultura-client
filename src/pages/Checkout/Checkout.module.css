@@ -46,7 +46,6 @@
     border: none;
     border-radius: 10px;
     color: white;
-    cursor: pointer;
     display: block;
     font-size: 1rem;
     font-weight: 500;
@@ -81,8 +80,14 @@
 }
 
 .custom-select__menu {
-    z-index: 10;
+    z-index: 1000;
+    position: relative;
 }
+
+.datetimeGroup.show {
+    overflow: visible;
+}
+
 
 .custom-select__single-value {
     color: #333;
