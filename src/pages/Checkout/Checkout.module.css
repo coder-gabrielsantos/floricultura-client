@@ -219,3 +219,24 @@
 .dateWrapper {
     flex: 1;
 }
+
+.notice {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+}
+
+.entrega {
+    color: #c62828;
+}
+
+.retirada {
+    color: #333333;
+}

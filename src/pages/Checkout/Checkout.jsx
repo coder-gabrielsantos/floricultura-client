@@ -101,7 +101,7 @@ const Checkout = () => {
             });
     }, []);
 
-    if (loading) return <Loader />;
+    if (loading) return <Loader/>;
 
     return (
         <div className={styles.container}>
@@ -165,6 +165,18 @@ const Checkout = () => {
             </div>
 
             {deliveryType === "entrega" && (
+                <div className={`${styles.notice} ${styles.visible} ${styles.entrega}`}>
+                    Uma taxa de R$ 10,00 será adicionada para entrega
+                </div>
+            )}
+
+            {deliveryType === "retirada" && (
+                <div className={`${styles.notice} ${styles.visible} ${styles.retirada}`}>
+                    Retirada no local: Rua Exemplo, nº 123 – Centro
+                </div>
+            )}
+
+            {deliveryType === "entrega" && (
                 <div className={styles.section}>
                     <h3>Escolha o Endereço</h3>
                     {profile.addresses.length > 0 ? (
@@ -205,33 +217,37 @@ const Checkout = () => {
                 </div>
             )}
 
-            <div className={styles.section}>
-                <h3>Data e Horário</h3>
-                <div className={styles.datetimeRow}>
-                    <div className={styles.dateWrapper}>
-                        <input
-                            type="date"
-                            className={styles.input}
-                            value={date}
-                            onChange={handleDateChange}
-                        />
-                    </div>
+            {deliveryType === "entrega" && (
+                <>
+                    <div className={styles.section}>
+                        <h3>Data e Horário</h3>
+                        <div className={styles.datetimeRow}>
+                            <div className={styles.dateWrapper}>
+                                <input
+                                    type="date"
+                                    className={styles.input}
+                                    value={date}
+                                    onChange={handleDateChange}
+                                />
+                            </div>
 
-                    <div className={styles.selectContainer}>
-                        <Select
-                            isDisabled={!date}
-                            options={availableBlocks.map((block) => ({
-                                value: block,
-                                label: block
-                            }))}
-                            value={timeBlock ? { value: timeBlock, label: timeBlock } : null}
-                            onChange={(option) => setTimeBlock(option.value)}
-                            classNamePrefix="custom-select"
-                            placeholder="Selecione o horário"
-                        />
+                            <div className={styles.selectContainer}>
+                                <Select
+                                    isDisabled={!date}
+                                    options={availableBlocks.map((block) => ({
+                                        value: block,
+                                        label: block
+                                    }))}
+                                    value={timeBlock ? { value: timeBlock, label: timeBlock } : null}
+                                    onChange={(option) => setTimeBlock(option.value)}
+                                    classNamePrefix="custom-select"
+                                    placeholder="Selecione o horário"
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </>
+            )}
 
             <div className={styles.section}>
                 <h3>Forma de Pagamento</h3>
@@ -254,7 +270,7 @@ const Checkout = () => {
                 onClick={handleConfirm}
                 className={styles.confirmBtn}
                 disabled={!isFormValid}
-                style={{ opacity: isFormValid ? 1 : 0.6}}
+                style={{ opacity: isFormValid ? 1 : 0.6 }}
             >
                 {isFormValid ? "Confirmar Pedido" : "Preencha todos os campos"}
             </button>
