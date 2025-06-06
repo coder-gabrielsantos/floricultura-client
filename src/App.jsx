@@ -1,44 +1,86 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import CatalogsPage from "./pages/Catalogs/CatalogsPage";
-import Home from "./pages/Home/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Navbar from "./components/Navbar";
-import LoginModal from "./components/LoginModal";
-import CartModal from "./components/CartModal.jsx";
+import CatalogsPage from "./pages/Catalogs/CatalogsPage.jsx";
+import Home from "./pages/Home/Home.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
+import PaymentSuccess from "./components/PaymentSuccess.jsx";
 import UserProfile from "./pages/User/UserProfile.jsx";
 import UserAddress from "./pages/User/UserAddress.jsx";
 import AdminPanel from "./pages/Admin/AdminPanel.jsx";
 import NewProduct from "./pages/Admin/NewProduct.jsx";
-import Checkout from "./pages/Checkout/Checkout.jsx";
-import PaymentSuccess from "./components/PaymentSuccess";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CartModal from "./components/CartModal";
 
-function App() {
-    const [showLogin, setShowLogin] = useState(false);
+const App = () => {
+    const [user, setUser] = useState(null);
     const [showCart, setShowCart] = useState(false);
 
+    useEffect(() => {
+        const local = localStorage.getItem("user");
+        if (local) {
+            setUser(JSON.parse(local));
+        }
+    }, []);
+
     return (
-        <Router>
-            <Navbar
-                onLoginClick={() => setShowLogin(true)}
-                onCartClick={() => setShowCart(true)}
-            />
-
-            {showLogin && <LoginModal onClose={() => setShowLogin(false)}/>}
-            {showCart && <CartModal onClose={() => setShowCart(false)}/>}
-
+        <BrowserRouter>
+            <Navbar user={user} onCartClick={() => setShowCart(true)} />
+            {showCart && <CartModal onClose={() => setShowCart(false)} />}
             <Routes>
+                {/* Público */}
                 <Route path="/" element={<CatalogsPage />} />
                 <Route path="/produtos" element={<Home />} />
-                <Route path="/perfil" element={<UserProfile />} />
-                <Route path="/endereco" element={<UserAddress />} />
-                <Route path="/painel" element={<AdminPanel />} />
-                <Route path="/novo-produto" element={<NewProduct />} />
-                <Route path="/editar-produto/:id" element={<NewProduct />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/sucesso" element={<PaymentSuccess />} />
+
+                {/* Usuário autenticado */}
+                <Route
+                    path="/perfil"
+                    element={
+                        <ProtectedRoute user={user}>
+                            <UserProfile />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/endereco"
+                    element={
+                        <ProtectedRoute user={user}>
+                            <UserAddress />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Administrador */}
+                <Route
+                    path="/painel"
+                    element={
+                        <ProtectedRoute user={user} role="admin">
+                            <AdminPanel />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/novo-produto"
+                    element={
+                        <ProtectedRoute user={user} role="admin">
+                            <NewProduct />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/editar-produto/:id"
+                    element={
+                        <ProtectedRoute user={user} role="admin">
+                            <NewProduct />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
-        </Router>
+        </BrowserRouter>
     );
-}
+};
 
 export default App;
