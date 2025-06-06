@@ -244,7 +244,7 @@ const Checkout = () => {
                         <div className={styles.selectContainer}>
                             <Select
                                 isDisabled={!date}
-                                options={availableBlocks.map((block) => ({
+                                options={(availableBlocks || []).map((block) => ({
                                     value: block,
                                     label: block
                                 }))}
