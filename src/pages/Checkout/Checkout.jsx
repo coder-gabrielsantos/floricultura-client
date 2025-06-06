@@ -25,11 +25,10 @@ const Checkout = () => {
 
     const isFormValid =
         receiverName.trim() &&
-        date &&
-        timeBlock &&
         deliveryType &&
         selectedPayment &&
-        (deliveryType === "retirada" || selectedAddress);
+        (deliveryType === "retirada" ||
+            (date && timeBlock && selectedAddress));
 
     const total = cart?.items?.reduce(
         (sum, item) =>
@@ -176,7 +175,11 @@ const Checkout = () => {
                 </div>
             )}
 
-            {deliveryType === "entrega" && (
+            <div
+                className={`${styles.addressSection} ${
+                    deliveryType === "entrega" ? styles.show : styles.hide
+                }`}
+            >
                 <div className={styles.section}>
                     <h3>Escolha o Endereço</h3>
                     {profile.addresses.length > 0 ? (
@@ -215,39 +218,41 @@ const Checkout = () => {
                         + Adicionar Novo Endereço
                     </button>
                 </div>
-            )}
+            </div>
 
-            {deliveryType === "entrega" && (
-                <>
-                    <div className={styles.section}>
-                        <h3>Data e Horário</h3>
-                        <div className={styles.datetimeRow}>
-                            <div className={styles.dateWrapper}>
-                                <input
-                                    type="date"
-                                    className={styles.input}
-                                    value={date}
-                                    onChange={handleDateChange}
-                                />
-                            </div>
+            <div
+                className={`${styles.datetimeGroup} ${
+                    deliveryType === "entrega" ? styles.show : styles.hide
+                }`}
+            >
+                <div className={styles.section}>
+                    <h3>Data e Horário</h3>
+                    <div className={styles.datetimeRow}>
+                        <div className={styles.dateWrapper}>
+                            <input
+                                type="date"
+                                className={styles.input}
+                                value={date}
+                                onChange={handleDateChange}
+                            />
+                        </div>
 
-                            <div className={styles.selectContainer}>
-                                <Select
-                                    isDisabled={!date}
-                                    options={availableBlocks.map((block) => ({
-                                        value: block,
-                                        label: block
-                                    }))}
-                                    value={timeBlock ? { value: timeBlock, label: timeBlock } : null}
-                                    onChange={(option) => setTimeBlock(option.value)}
-                                    classNamePrefix="custom-select"
-                                    placeholder="Selecione o horário"
-                                />
-                            </div>
+                        <div className={styles.selectContainer}>
+                            <Select
+                                isDisabled={!date}
+                                options={availableBlocks.map((block) => ({
+                                    value: block,
+                                    label: block
+                                }))}
+                                value={timeBlock ? { value: timeBlock, label: timeBlock } : null}
+                                onChange={(option) => setTimeBlock(option.value)}
+                                classNamePrefix="custom-select"
+                                placeholder="Selecione o horário"
+                            />
                         </div>
                     </div>
-                </>
-            )}
+                </div>
+            </div>
 
             <div className={styles.section}>
                 <h3>Forma de Pagamento</h3>
