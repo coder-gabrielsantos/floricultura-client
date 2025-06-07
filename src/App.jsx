@@ -12,10 +12,12 @@ import UserAddress from "./pages/User/UserAddress.jsx";
 import AdminPanel from "./pages/Admin/AdminPanel.jsx";
 import NewProduct from "./pages/Admin/NewProduct.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LoginModal from "./components/LoginModal.jsx";
 import CartModal from "./components/CartModal";
 
 const App = () => {
     const [user, setUser] = useState(null);
+    const [showLogin, setShowLogin] = useState(false);
     const [showCart, setShowCart] = useState(false);
 
     useEffect(() => {
@@ -27,7 +29,10 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <Navbar user={user} onCartClick={() => setShowCart(true)} />
+            <Navbar user={user}
+                    onCartClick={() => setShowCart(true)}
+                    onLoginClick={() => setShowLogin(true)} />
+            {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
             {showCart && <CartModal onClose={() => setShowCart(false)} />}
             <Routes>
                 {/* Público */}
