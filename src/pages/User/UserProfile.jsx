@@ -87,6 +87,8 @@ const UserProfile = () => {
 
     if (loading) return <Loader/>;
 
+    if (loading || !profile) return <Loader />;
+
     return (
         <div className={styles.container}>
             <div className={styles.titleRow}>
