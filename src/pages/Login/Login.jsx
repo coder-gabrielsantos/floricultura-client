@@ -6,7 +6,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({
         name: "",
-        identifier: "",
+        phone: "",
         password: ""
     });
 
@@ -38,7 +38,7 @@ const Login = () => {
                         type="text"
                         name="identifier"
                         placeholder="Email ou Telefone"
-                        value={form.identifier}
+                        value={form.phone}
                         onChange={handleChange}
                         className={styles.input}
                     />

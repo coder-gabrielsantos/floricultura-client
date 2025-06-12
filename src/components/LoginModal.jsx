@@ -7,7 +7,7 @@ const LoginModal = ({ onClose }) => {
     const [isClosing, setIsClosing] = useState(false);
     const [form, setForm] = useState({
         name: "",
-        identifier: "",
+        phone: "",
         password: ""
     });
     const [message, setMessage] = useState("");
@@ -36,7 +36,7 @@ const LoginModal = ({ onClose }) => {
                 handleClose();
             } else {
                 const user = await loginUser({
-                    identifier: form.identifier,
+                    phone: form.phone,
                     password: form.password
                 });
                 login(user);
@@ -84,9 +84,9 @@ const LoginModal = ({ onClose }) => {
                     )}
                     <input
                         type="text"
-                        name="identifier"
+                        name="phone"
                         placeholder="Whatsapp"
-                        value={form.identifier}
+                        value={form.phone}
                         onChange={handleChange}
                         style={styles.input}
                         required
