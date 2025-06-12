@@ -15,7 +15,23 @@ const LoginModal = ({ onClose }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
+
+        if (name === "phone") {
+            const numeric = value.replace(/\D/g, "").slice(0, 11);
+            setForm((prev) => ({ ...prev, phone: numeric }));
+        } else {
+            setForm((prev) => ({ ...prev, [name]: value }));
+        }
+    };
+
+    const formatPhone = (value) => {
+        const cleaned = value.replace(/\D/g, "").slice(0, 11);
+
+        if (cleaned.length <= 2) return cleaned;
+        if (cleaned.length <= 7)
+            return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+        if (cleaned.length <= 11)
+            return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 3)} ${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
     };
 
     const handleClose = () => {
@@ -86,7 +102,9 @@ const LoginModal = ({ onClose }) => {
                         type="text"
                         name="phone"
                         placeholder="Whatsapp"
-                        value={form.phone}
+                        inputMode="numeric"
+                        pattern="\d*"
+                        value={formatPhone(form.phone) || ""}
                         onChange={handleChange}
                         style={styles.input}
                         required
@@ -120,8 +138,8 @@ const LoginModal = ({ onClose }) => {
                         }}
                         style={styles.link}
                     >
-            {isRegistering ? "Entrar" : "Criar conta"}
-          </span>
+                        {isRegistering ? "Entrar" : "Criar conta"}
+                    </span>
                 </p>
             </div>
         </div>
