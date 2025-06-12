@@ -90,7 +90,7 @@ const CartModal = ({ onClose }) => {
                             </div>
                         ))
                     ) : (
-                        <p style={styles.empty}>Sua sacola está vazia.</p>
+                        <p style={styles.empty}>Seu carrinho está vazio</p>
                     )}
                 </div>
 
