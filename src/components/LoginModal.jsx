@@ -103,7 +103,6 @@ const LoginModal = ({ onClose }) => {
                         name="phone"
                         placeholder="Whatsapp"
                         inputMode="numeric"
-                        pattern="\d*"
                         value={formatPhone(form.phone) || ""}
                         onChange={handleChange}
                         style={styles.input}
