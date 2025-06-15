@@ -100,15 +100,19 @@ const UserProfile = () => {
             });
     }, []);
 
-    if (loading || !profile) return <Loader />;
+    if (loading || !profile) return <Loader/>;
 
     return (
         <div className={styles.container}>
             <div className={styles.titleRow}>
                 <h2 className={styles.title}>
-                    {profile.role === "admin" &&
-                    <span style={{ fontWeight: 400, fontStyle: "italic" }}>Olá, administrador...</span>}
+                    {profile.role === "admin" ? (
+                        <>Olá, administrador...</>
+                    ) : (
+                        <>Olá, {profile.name}</>
+                    )}
                 </h2>
+
                 <button
                     className={styles.logoutButton}
                     onClick={() => {
@@ -131,7 +135,7 @@ const UserProfile = () => {
                 </div>
 
                 <p><strong>Nome:</strong> {profile.name}</p>
-                <p>Whatsapp: {formatPhone(profile.phone)}</p>
+                <p><strong>Whatsapp:</strong> {formatPhone(profile.phone)}</p>
             </div>
 
             {profile.role !== "admin" && (
