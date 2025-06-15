@@ -274,8 +274,8 @@
 }
 
 .total {
-    color: green;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .orderDetails {
