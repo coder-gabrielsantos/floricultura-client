@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCatalogs } from "../../api/_index";
 import BannerHeader from "../../components/BannerHeader.jsx";
+import Loader from "../../components/Loader.jsx";
 import defaultCatalogImage from "../../assets/default-catalog.jpeg";
 import styles from "./CatalogsPage.module.css";
 
 const CatalogsPage = () => {
     const [catalogs, setCatalogs] = useState([]);
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchCatalogs = async () => {
@@ -22,8 +25,10 @@ const CatalogsPage = () => {
                 };
 
                 setCatalogs([defaultCatalog, ...data]);
+                setLoading(false);
             } catch (err) {
                 console.error("Erro ao carregar catálogos:", err);
+                setLoading(false);
             }
         };
 
@@ -54,6 +59,8 @@ const CatalogsPage = () => {
 
         return `data:${firstProduct.images[0].contentType};base64,${base64}`;
     };
+
+    if (loading || !catalogs) return <Loader />;
 
     return (
         <>
