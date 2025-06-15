@@ -5,6 +5,7 @@ import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { LogOut } from "iconoir-react";
+import Select from "react-select";
 import styles from "./UserProfile.module.css";
 
 const ORDERS_PER_PAGE = 2;
@@ -20,8 +21,13 @@ const UserProfile = () => {
     const [confirming, setConfirming] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [passwordError, setPasswordError] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
 
-    const paginatedOrders = orders.slice(
+    const filteredOrders = statusFilter
+        ? orders.filter((order) => order.status === statusFilter)
+        : orders;
+
+    const paginatedOrders = filteredOrders.slice(
         (currentPage - 1) * ORDERS_PER_PAGE,
         currentPage * ORDERS_PER_PAGE
     );
@@ -185,7 +191,43 @@ const UserProfile = () => {
 
             {profile.role !== "admin" && (
                 <div className={styles.section}>
-                    <h3 className={styles.subtitle}>Meus Pedidos</h3>
+                    <div className={styles.ordersHeader}>
+                        <h3 className={styles.subtitle}>Meus Pedidos</h3>
+
+                        <div className={styles.selectFilterWrapper}>
+                            <Select
+                                options={[
+                                    { value: "", label: "Todos" },
+                                    { value: "pendente", label: "Pendente" },
+                                    { value: "confirmado", label: "Confirmado" },
+                                    { value: "entregue", label: "Entregue" },
+                                    { value: "cancelado", label: "Cancelado" },
+                                ]}
+                                value={[
+                                    { value: "", label: "Todos" },
+                                    { value: "pendente", label: "Pendente" },
+                                    { value: "confirmado", label: "Confirmado" },
+                                    { value: "entregue", label: "Entregue" },
+                                    { value: "cancelado", label: "Cancelado" },
+                                ].find((opt) => opt.value === statusFilter)}
+                                onChange={(selected) => {
+                                    setStatusFilter(selected.value);
+                                    setCurrentPage(1);
+                                }}
+                                placeholder="Filtrar status"
+                                classNamePrefix="custom-select"
+                                isSearchable={false}
+                                styles={{
+                                    container: (base) => ({ ...base, minWidth: 150 }),
+                                    control: (base) => ({
+                                        ...base,
+                                        minHeight: '32px',
+                                        fontSize: '0.85rem',
+                                    }),
+                                }}
+                            />
+                        </div>
+                    </div>
 
                     {orders.length === 0 ? (
                         <p className={styles.noData}>Nenhum pedido encontrado.</p>
@@ -205,7 +247,9 @@ const UserProfile = () => {
                                                 ? `${new Date(order.date).toLocaleDateString()} - ${order.timeBlock}`
                                                 : "Pedido para retirada"}
                                         </h4>
-                                        <span className={styles.status}>{order.status}</span>
+                                        <span className={`${styles.status} ${styles[order.status]}`}>
+                                            {order.status}
+                                        </span>
                                     </header>
 
                                     <ul className={styles.productList}>
