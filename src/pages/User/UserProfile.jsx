@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserData, deleteAddress, getOrders, updateProfile } from "../../api/_index.js";
+import { getUserData, deleteAddress, getOrders, updateProfile, startPayment } from "../../api/_index.js";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -79,7 +79,24 @@ const UserProfile = () => {
     };
 
     const handlePayment = async (order) => {
-        console.log("Implementar pagamento...")
+        try {
+            const total = order.products.reduce(
+                (sum, item) => sum + (item.product?.price || 0) * item.quantity,
+                0
+            );
+
+            const initPoint = await startPayment({
+                description: "Pedido Floricultura",
+                price: total,
+                quantity: 1,
+                orderId: order._id,
+            });
+
+            window.location.href = initPoint;
+        } catch (err) {
+            console.error("Erro ao iniciar pagamento:", err);
+            alert("Erro ao iniciar pagamento.");
+        }
     };
 
     useEffect(() => {
@@ -295,14 +312,13 @@ const UserProfile = () => {
                                                 </div>
                                             </div>
 
-                                            {order.status === "pendente" && (
+                                            {order.status === "pendente" && order.paymentMethod === "online" && (
                                                 <div className={styles.paymentAction}>
                                                     <button
                                                         className={styles.payBtn}
                                                         onClick={() => handlePayment(order)}
-                                                        disabled
                                                     >
-                                                        Realizar Pagamento (em breve)
+                                                        Realizar Pagamento
                                                     </button>
                                                 </div>
                                             )}
