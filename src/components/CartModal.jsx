@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash, XmarkSquare } from "iconoir-react";
 import { getCart, removeFromCart } from "../api/_index.js";
+import Loader from "./Loader.jsx";
 
 const CartModal = ({ onClose }) => {
     const navigate = useNavigate();
     const [cart, setCart] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
@@ -17,6 +19,7 @@ const CartModal = ({ onClose }) => {
         getCart(token)
             .then(setCart)
             .catch((err) => console.error("Erro ao buscar carrinho:", err));
+        setLoading(false);
     }, []);
 
     const removeItem = async (productId) => {
@@ -61,37 +64,41 @@ const CartModal = ({ onClose }) => {
                 <div style={styles.header}>
                     <h2 style={styles.title}>Meu Carrinho</h2>
                     <button style={styles.closeBtn} onClick={handleClose}>
-                        <XmarkSquare />
+                        <XmarkSquare/>
                     </button>
                 </div>
 
                 <div style={styles.content}>
-                    {cart?.items?.length > 0 ? (
-                        cart.items.map((item) => (
-                            <div key={item.product._id} style={styles.card}>
-                                <div style={styles.info}>
-                                    <p style={styles.name}>{item.product.name}</p>
-                                    <p style={styles.details}>
-                                        Qtd: {item.quantity} × R$ {item.product.price.toFixed(2)}
-                                    </p>
-                                </div>
+                    {
+                        loading || !cart ? <Loader/> : (
 
-                                <div style={styles.actions}>
-                                    <p style={styles.price}>
-                                        R$ {(item.quantity * item.product.price).toFixed(2)}
-                                    </p>
-                                    <button
-                                        onClick={() => removeItem(item.product._id)}
-                                        style={styles.removeBtn}
-                                    >
-                                        <Trash />
-                                    </button>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p style={styles.empty}>Seu carrinho está vazio</p>
-                    )}
+                            cart?.items?.length > 0 ? (
+                                cart.items.map((item) => (
+                                    <div key={item.product._id} style={styles.card}>
+                                        <div style={styles.info}>
+                                            <p style={styles.name}>{item.product.name}</p>
+                                            <p style={styles.details}>
+                                                Qtd: {item.quantity} × R$ {item.product.price.toFixed(2)}
+                                            </p>
+                                        </div>
+
+                                        <div style={styles.actions}>
+                                            <p style={styles.price}>
+                                                R$ {(item.quantity * item.product.price).toFixed(2)}
+                                            </p>
+                                            <button
+                                                onClick={() => removeItem(item.product._id)}
+                                                style={styles.removeBtn}
+                                            >
+                                                <Trash/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p style={styles.empty}>Seu carrinho está vazio</p>
+                            ))
+                    }
                 </div>
 
                 <div style={styles.footer}>
