@@ -160,27 +160,60 @@
 }
 
 .total {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 600;
     color: #333;
 }
 
+.ordersHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.selectFilterWrapper {
+    min-width: 150px;
+}
+
 .status {
+    align-items: center;
     border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: default;
+    display: inline-flex;
     font-size: 0.85rem;
     font-weight: 600;
-    padding: 8px 6px;
+    height: 25px;
+    justify-content: center;
+    min-width: 100px;
+    padding: 0 12px;
     text-transform: capitalize;
 }
 
+/* Entregue - Verde escuro com fundo claro */
 .status.entregue {
-    background-color: #e8f5e9;
-    color: #388e3c;
+    background-color: #e0f7e9;
+    border: 1px solid #1b5e20;
+    color: #1b5e20;
 }
 
-.status.aguardando-pagamento {
-    background-color: #fff3e0;
-    color: #f57c00;
+/* Confirmado - Verde padrão */
+.status.confirmado {
+    background-color: #d0f0d8;
+    color: #2e7d32;
+}
+
+/* Pendente - Amarelo suave com texto mais escuro */
+.status.pendente {
+    background-color: #fff8e1;
+    color: #ff8f00;
+}
+
+/* Cancelado - Vermelho suave de fundo com vermelho forte no texto */
+.status.cancelado {
+    background-color: #ffebee;
+    color: #c62828;
 }
 
 .productHeader {

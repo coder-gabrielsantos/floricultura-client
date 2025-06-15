@@ -6,6 +6,7 @@ import {
     deleteProduct,
     updateOrderStatus
 } from "../../api/_index.js";
+import Select from "react-select";
 import CatalogManager from "../../components/CatalogManager.jsx";
 import ConfirmModal from "../../components/ConfirmModal.jsx";
 import Loader from "../../components/Loader.jsx";
@@ -36,6 +37,7 @@ const AdminPanel = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentOrderPage, setCurrentOrderPage] = useState(1);
     const [expandedOrderId, setExpandedOrderId] = useState(null);
+    const [statusFilter, setStatusFilter] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -69,11 +71,46 @@ const AdminPanel = () => {
             <div className={styles.titleRow}>
                 <h2 className={styles.title}>Painel do Administrador</h2>
             </div>
-
             <div className={styles.section}>
-                <h3>Pedidos de Clientes</h3>
+                <div className={styles.ordersHeader}>
+                    <h3>Pedidos de Clientes</h3>
+                    <div className={styles.selectFilterWrapper}>
+                        <Select
+                            options={[
+                                { value: "", label: "Todos" },
+                                { value: "pendente", label: "Pendente" },
+                                { value: "confirmado", label: "Confirmado" },
+                                { value: "entregue", label: "Entregue" },
+                                { value: "cancelado", label: "Cancelado" },
+                            ]}
+                            value={[
+                                { value: "", label: "Todos" },
+                                { value: "pendente", label: "Pendente" },
+                                { value: "confirmado", label: "Confirmado" },
+                                { value: "entregue", label: "Entregue" },
+                                { value: "cancelado", label: "Cancelado" },
+                            ].find((opt) => opt.value === statusFilter)}
+                            onChange={(selected) => {
+                                setStatusFilter(selected.value);
+                                setCurrentOrderPage(1);
+                            }}
+                            placeholder="Filtrar status"
+                            classNamePrefix="custom-select"
+                            isSearchable={false}
+                            styles={{
+                                container: (base) => ({ ...base, minWidth: 150 }),
+                                control: (base) => ({
+                                    ...base,
+                                    minHeight: '32px',
+                                    fontSize: '0.85rem',
+                                }),
+                            }}
+                        />
+                    </div>
+                </div>
                 {orders.length > 0 ? (
                     orders
+                        .filter((order) => !statusFilter || order.status === statusFilter)
                         .slice()
                         .sort((a, b) => {
                             const statusOrder = { pendente: 0, confirmado: 1, cancelado: 2, entregue: 3 };
