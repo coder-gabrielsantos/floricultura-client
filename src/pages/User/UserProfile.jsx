@@ -57,6 +57,21 @@ const UserProfile = () => {
         }
     };
 
+    const formatPhone = (value) => {
+        const cleaned = value.replace(/\D/g, "").slice(0, 11);
+
+        if (cleaned.length <= 2) return cleaned;
+        if (cleaned.length <= 7)
+            return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+        if (cleaned.length <= 11)
+            return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 3)} ${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
+    };
+
+    const handlePhoneChange = (e) => {
+        const numeric = e.target.value.replace(/\D/g, "").slice(0, 11);
+        setEditData((prev) => ({ ...prev, phone: numeric }));
+    };
+
     const handlePayment = async (order) => {
         console.log("Implementar pagamento...")
     };
@@ -85,16 +100,14 @@ const UserProfile = () => {
             });
     }, []);
 
-    if (loading) return <Loader/>;
-
     if (loading || !profile) return <Loader />;
 
     return (
         <div className={styles.container}>
             <div className={styles.titleRow}>
                 <h2 className={styles.title}>
-                    Minha Conta {profile.role === "admin" &&
-                    <span style={{ fontWeight: 400, fontStyle: "italic" }}> - adm</span>}
+                    {profile.role === "admin" &&
+                    <span style={{ fontWeight: 400, fontStyle: "italic" }}>Olá, administrador...</span>}
                 </h2>
                 <button
                     className={styles.logoutButton}
@@ -118,7 +131,7 @@ const UserProfile = () => {
                 </div>
 
                 <p><strong>Nome:</strong> {profile.name}</p>
-                <p><strong>WhatsApp:</strong> {profile.phone}</p>
+                <p>Whatsapp: {formatPhone(profile.phone)}</p>
             </div>
 
             {profile.role !== "admin" && (
@@ -308,9 +321,9 @@ const UserProfile = () => {
 
                         <input
                             type="text"
-                            placeholder="Telefone"
-                            value={editData.phone}
-                            onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+                            placeholder="Whatsapp"
+                            value={formatPhone(editData.phone) || ""}
+                            onChange={handlePhoneChange}
                             className={styles.modalInput}
                         />
 
